@@ -108,16 +108,13 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
             <div key={group} className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium flex items-center">
-                  <Badge variant="outline" className="mr-2">
-                    {group}
-                  </Badge>
-                  {group}
+                  <Switch
+                    checked={isGroupEnabled(group)}
+                    onCheckedChange={(checked) => toggleGroup(group, checked)}
+                    className={isGroupPartiallyEnabled(group) ? "bg-amber-500" : ""}
+                  />
+                  &nbsp;{group}
                 </h3>
-                <Switch
-                  checked={isGroupEnabled(group)}
-                  onCheckedChange={(checked) => toggleGroup(group, checked)}
-                  className={isGroupPartiallyEnabled(group) ? "bg-amber-500" : ""}
-                />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pl-4 border-l-2 border-muted">
                 {filteredGroups[group].map((item) => (
