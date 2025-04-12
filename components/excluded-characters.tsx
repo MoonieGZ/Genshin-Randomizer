@@ -65,7 +65,7 @@ export default function ExcludedCharacters() {
                       </div>
                       <div className="flex items-center justify-center h-full">
                         <Image
-                          src={`/placeholder.svg?height=80&width=80&text=${encodeURIComponent(character.name)}`}
+                          src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
                           alt={character.name}
                           width={80}
                           height={80}
@@ -73,7 +73,7 @@ export default function ExcludedCharacters() {
                         />
                       </div>
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="text-white font-medium">Click to Re-enable</span>
+                        <span className="text-white font-medium">Click to re-enable</span>
                       </div>
                     </div>
                     <div className="text-center">

@@ -215,7 +215,8 @@ export default function RandomizerForm() {
                     {result.characters.map((character, index) => (
                       <Card
                         key={character.name}
-                        className={`overflow-hidden ${character.selected ? "ring-2 ring-primary" : ""}`}
+                        className={`overflow-hidden cursor-pointer ${character.selected ? "ring-2 ring-primary" : ""}`}
+                        onClick={() => settings.enableExclusion && toggleCharacterSelection(index)}
                       >
                         <CardContent className="p-3 space-y-2">
                           <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
@@ -230,6 +231,7 @@ export default function RandomizerForm() {
                                   checked={character.selected}
                                   onCheckedChange={() => toggleCharacterSelection(index)}
                                   id={`select-${character.name}`}
+                                  onClick={(e) => e.stopPropagation()}
                                 />
                               </div>
                             )}
@@ -258,15 +260,10 @@ export default function RandomizerForm() {
                 </div>
               )}
 
-              <div className="flex justify-between">
-                {settings.enableExclusion && result.characters.length > 0 && (
-                  <Button onClick={handleAcceptSelected} variant="outline">
-                    Accept Selected
-                  </Button>
-                )}
-                <div className="ml-auto">
-                  <Button onClick={() => setOpen(false)}>Close</Button>
-                </div>
+              <div className="flex justify-end">
+                <Button onClick={settings.enableExclusion ? handleAcceptSelected : () => setOpen(false)}>
+                  {settings.enableExclusion ? "Accept" : "Close"}
+                </Button>
               </div>
             </div>
           )}
