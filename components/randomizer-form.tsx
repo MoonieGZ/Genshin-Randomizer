@@ -187,7 +187,7 @@ export default function RandomizerForm() {
                             </div>
                             <div className="flex items-center justify-center h-full">
                               <Image
-                                src={`/placeholder.svg?height=80&width=80&text=${encodeURIComponent(boss.name)}`}
+                                src={`/bosses/${boss.location}/${boss.name}?height=80&width=80&text=${encodeURIComponent(boss.name)}`}
                                 alt={boss.name}
                                 width={80}
                                 height={80}
@@ -235,7 +235,7 @@ export default function RandomizerForm() {
                             )}
                             <div className="flex items-center justify-center h-full">
                               <Image
-                                src={`/placeholder.svg?height=80&width=80&text=${encodeURIComponent(character.name)}`}
+                                src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
                                 alt={character.name}
                                 width={80}
                                 height={80}
