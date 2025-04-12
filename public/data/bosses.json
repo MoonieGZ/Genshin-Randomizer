@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Emperor of Fire and Iron",
+    "icon": "Emperor_of_Fire_and_Iron_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Hydro Tulpa",
+    "icon": "Hydro_Tulpa_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Icewind Suite (Coppellia)",
+    "icon": "Icewind_Suite_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Icewind Suite (Coppelius)",
+    "icon": "Icewind_Suite_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Millennial Pearl Seahorse",
+    "icon": "Millennial_Pearl_Seahorse_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Prototype Cal. Breguet",
+    "icon": "Prototype_Cal._Breguet_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Statue of Marble and Brass",
+    "icon": "Statue_of_Marble_and_Brass_Icon.webp",
+    "location": "Fontaine"
+  },
+  {
+    "name": "Bathysmal Vishap Herd",
+    "icon": "Bathysmal_Vishap_Herd_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Golden Wolflord",
+    "icon": "Golden_Wolflord_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Hydro Hypostasis",
+    "icon": "Hydro_Hypostasis_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Maguu Kenki",
+    "icon": "Maguu_Kenki_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Perpetual Mechanical Array",
+    "icon": "Perpetual_Mechanical_Array_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Pyro Hypostasis",
+    "icon": "Pyro_Hypostasis_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Thunder Manifestation",
+    "icon": "Thunder_Manifestation_Icon.webp",
+    "location": "Inazuma"
+  },
+  {
+    "name": "Geo Hypostasis",
+    "icon": "Geo_Hypostasis_Icon.webp",
+    "location": "Liyue"
+  },
+  {
+    "name": "Oceanid",
+    "icon": "Oceanid_Icon.webp",
+    "location": "Liyue"
+  },
+  {
+    "name": "Primo Geovishap",
+    "icon": "Primo_Geovishap_Icon.webp",
+    "location": "Liyue"
+  },
+  {
+    "name": "Pyro Regisvine",
+    "icon": "Pyro_Regisvine_Icon.webp",
+    "location": "Liyue"
+  },
+  {
+    "name": "Ruin Serpent",
+    "icon": "Ruin_Serpent_Icon.webp",
+    "location": "Liyue"
+  },
+  {
+    "name": "Solitary Suanni",
+    "icon": "Solitary_Suanni_Icon.webp",
+    "location": "Liyue"
+  },
+  {
+    "name": "Anemo Hypostasis",
+    "icon": "Anemo_Hypostasis_Icon.webp",
+    "location": "Mondstadt"
+  },
+  {
+    "name": "Cryo Hypostasis",
+    "icon": "Cryo_Hypostasis_Icon.webp",
+    "location": "Mondstadt"
+  },
+  {
+    "name": "Cryo Regisvine",
+    "icon": "Cryo_Regisvine_Icon.webp",
+    "location": "Mondstadt"
+  },
+  {
+    "name": "Electro Hypostasis",
+    "icon": "Electro_Hypostasis_Icon.webp",
+    "location": "Mondstadt"
+  },
+  {
+    "name": "Holawaqa Ngoubou",
+    "icon": "Holawaqa_Ngoubou_Icon.webp",
+    "location": "Natlan"
+  },
+  {
+    "name": "Kongamato",
+    "icon": "Kongamato_Icon.webp",
+    "location": "Natlan"
+  },
+  {
+    "name": "Lava Dragon Statue",
+    "icon": "Lava_Dragon_Statue_Icon.webp",
+    "location": "Natlan"
+  },
+  {
+    "name": "Secret Source Automaton Configuration Device",
+    "icon": "Secret_Source_Automaton_Configuration_Device_Icon.webp",
+    "location": "Natlan"
+  },
+  {
+    "name": "Tenebrous Papilla",
+    "icon": "Tenebrous_Papilla_Icon.webp",
+    "location": "Natlan"
+  },
+  {
+    "name": "Wayward Hermetic Spiritspeaker",
+    "icon": "Wayward_Hermetic_Spiritspeaker_Icon.webp",
+    "location": "Natlan"
+  },
+  {
+    "name": "Aeonblight Drake",
+    "icon": "Aeonblight_Drake_Icon.webp",
+    "location": "Sumeru"
+  },
+  {
+    "name": "Algorithm of Semi-Intransient Matrix of Overseer Network",
+    "icon": "Algorithm_of_Semi-Intransient_Matrix_of_Overseer_Network_Icon.webp",
+    "location": "Sumeru"
+  },
+  {
+    "name": "Dendro Hypostasis",
+    "icon": "Dendro_Hypostasis_Icon.webp",
+    "location": "Sumeru"
+  },
+  {
+    "name": "Electro Regisvine",
+    "icon": "Electro_Regisvine_Icon.webp",
+    "location": "Sumeru"
+  },
+  {
+    "name": "Iniquitous Baptist",
+    "icon": "Iniquitous_Baptist_Icon.webp",
+    "location": "Sumeru"
+  },
+  {
+    "name": "Jadeplume Terrorshroom",
+    "icon": "Jadeplume_Terrorshroom_Icon.webp",
+    "location": "Sumeru"
+  }
+]
