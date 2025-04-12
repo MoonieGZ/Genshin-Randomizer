@@ -9,8 +9,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: "Genshin Impact Randomizer",
-  description: "Randomize Genshin Impact characters and bosses",
-    generator: 'v0.dev'
+  description: "Randomize Genshin Impact characters and bosses"
 }
 
 export default function RootLayout({
