@@ -20,13 +20,13 @@ export type Settings = {
   characters: {
     count: number
     enabled: Record<string, boolean>
-    excluded: string[] // Add this line
+    excluded: string[]
   }
   bosses: {
     count: number
     enabled: Record<string, boolean>
   }
-  enableExclusion: boolean // Add this line
+  enableExclusion: boolean
 }
 
 // Update the GenshinDataContextType to include new functions
@@ -39,9 +39,9 @@ type GenshinDataContextType = {
   updateBossEnabled: (name: string, enabled: boolean) => void
   updateCharacterCount: (count: number) => void
   updateBossCount: (count: number) => void
-  excludeCharacter: (name: string) => void // Add this line
-  includeCharacter: (name: string) => void // Add this line
-  toggleExclusion: (enabled: boolean) => void // Add this line
+  excludeCharacter: (name: string) => void
+  includeCharacter: (name: string) => void
+  toggleExclusion: (enabled: boolean) => void
 }
 
 const GenshinDataContext = createContext<GenshinDataContextType | undefined>(undefined)
@@ -54,13 +54,13 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     characters: {
       count: 4,
       enabled: {},
-      excluded: [], // Add this line
+      excluded: [],
     },
     bosses: {
-      count: 2,
+      count: 8,
       enabled: {},
     },
-    enableExclusion: true, // Add this line
+    enableExclusion: true,
   })
 
   useEffect(() => {
@@ -158,7 +158,6 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     }))
   }
 
-  // Add these new functions to the provider
   const excludeCharacter = (name: string) => {
     setSettings((prev) => ({
       ...prev,
@@ -186,7 +185,6 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     }))
   }
 
-  // Add the new functions to the context value
   return (
     <GenshinDataContext.Provider
       value={{
@@ -198,9 +196,9 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         updateBossEnabled,
         updateCharacterCount,
         updateBossCount,
-        excludeCharacter, // Add this line
-        includeCharacter, // Add this line
-        toggleExclusion, // Add this line
+        excludeCharacter,
+        includeCharacter,
+        toggleExclusion,
       }}
     >
       {children}

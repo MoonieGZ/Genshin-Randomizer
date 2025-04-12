@@ -171,7 +171,6 @@ export default function RandomizerForm() {
 
           {result && (
             <div className="space-y-6">
-              {/* Display bosses first */}
               {result.bosses.length > 0 && (
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Bosses ({result.bosses.length})</h3>
@@ -207,7 +206,6 @@ export default function RandomizerForm() {
                 </div>
               )}
 
-              {/* Then display characters */}
               {result.characters.length > 0 && (
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Characters ({result.characters.length})</h3>
@@ -261,8 +259,14 @@ export default function RandomizerForm() {
               )}
 
               <div className="flex justify-end">
-                <Button onClick={settings.enableExclusion ? handleAcceptSelected : () => setOpen(false)}>
-                  {settings.enableExclusion ? "Accept" : "Close"}
+                <Button
+                  onClick={
+                    randomizeType === "bosses" || !settings.enableExclusion
+                      ? () => setOpen(false)
+                      : handleAcceptSelected
+                  }
+                >
+                  {randomizeType === "bosses" || !settings.enableExclusion ? "Close" : "Accept"}
                 </Button>
               </div>
             </div>
