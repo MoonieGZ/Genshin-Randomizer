@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
-import { Settings } from "lucide-react"
+import { Settings, Github } from "lucide-react"
 import RandomizerForm from "@/components/randomizer-form"
 
 export default function Home() {
@@ -10,12 +10,20 @@ export default function Home() {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Genshin Impact Randomizer</h1>
-          <Link href="/settings">
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Button>
-          </Link>
+          <div className="flex items-center space-x-2">
+            <Link href="https://github.com/MoonieGZ/Genshin-Randomizer" target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="icon">
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub Repository</span>
+              </Button>
+            </Link>
+            <Link href="/settings">
+              <Button variant="ghost" size="icon">
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">Settings</span>
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 

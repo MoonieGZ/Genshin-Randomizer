@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Github } from "lucide-react"
 import SettingsForm from "@/components/settings-form"
 import ExcludedCharacters from "@/components/excluded-characters"
 
@@ -18,6 +18,14 @@ export default function SettingsPage() {
             </Button>
           </Link>
           <h1 className="text-2xl font-bold">Settings</h1>
+          <div className="ml-auto">
+            <Link href="https://github.com/MoonieGZ/Genshin-Randomizer" target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="icon">
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub Repository</span>
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
