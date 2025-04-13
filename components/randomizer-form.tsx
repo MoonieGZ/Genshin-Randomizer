@@ -37,6 +37,9 @@ export default function RandomizerForm() {
   const [randomizeType, setRandomizeType] = useState<"characters" | "bosses">("characters")
   const { toast } = useToast()
 
+  // Check if all characters are currently selected
+  const areAllCharactersSelected = result?.characters.every((char) => char.selected) || false
+
   const handleRandomize = (type: "characters" | "bosses") => {
     setRandomizeType(type)
 
@@ -163,6 +166,19 @@ export default function RandomizerForm() {
     setResult({
       ...result,
       characters: result.characters.map((char, i) => (i === index ? { ...char, selected: !char.selected } : char)),
+    })
+  }
+
+  const toggleAllCharacters = () => {
+    if (!result) return
+
+    // If all characters are currently selected, deselect all
+    // Otherwise, select all
+    const newSelectedState = !areAllCharactersSelected
+
+    setResult({
+      ...result,
+      characters: result.characters.map((char) => ({ ...char, selected: newSelectedState })),
     })
   }
 
@@ -340,7 +356,12 @@ export default function RandomizerForm() {
                   </div>
                 )}
 
-                <div className="flex justify-end">
+                <div className="flex justify-end space-x-2">
+                  {randomizeType === "characters" && settings.enableExclusion && (
+                    <Button variant="outline" onClick={toggleAllCharacters}>
+                      {areAllCharactersSelected ? "Unselect All" : "Select All"}
+                    </Button>
+                  )}
                   <Button
                     onClick={
                       randomizeType === "bosses" || !settings.enableExclusion
