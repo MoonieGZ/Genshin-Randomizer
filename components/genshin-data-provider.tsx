@@ -7,12 +7,15 @@ import { createContext, useContext, useEffect, useState } from "react"
 // Define the Character and Boss types
 export type Character = {
   name: string
+  rarity: number
   element: string
+  icon: string
 }
 
 export type Boss = {
   name: string
-  region: string
+  icon: string
+  location: string
   link: string
 }
 

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 
 export default function SettingsForm({ type }: { type: "characters" | "bosses" }) {
   const { characters, bosses, settings, updateCharacterEnabled, updateBossEnabled } = useGenshinData()
@@ -107,13 +107,13 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
           {filteredGroupKeys.map((group) => (
             <div key={group} className="space-y-2">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium flex items-center">
+                <h3 className="font-medium flex items-center gap-2">
                   <Switch
                     checked={isGroupEnabled(group)}
                     onCheckedChange={(checked) => toggleGroup(group, checked)}
                     className={isGroupPartiallyEnabled(group) ? "bg-amber-500" : ""}
                   />
-                  &nbsp;{group}
+                  {group}
                 </h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pl-4 border-l-2 border-muted">
@@ -122,7 +122,18 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
                     key={item.name}
                     className="flex items-center justify-between space-x-2 p-2 rounded-md hover:bg-muted"
                   >
-                    <Label htmlFor={`${type}-${item.name}`} className="flex-1 cursor-pointer">
+                    <Label htmlFor={`${type}-${item.name}`} className="flex cursor-pointer items-center gap-2">
+                      <Image
+                        src={
+                          type === "bosses"
+                            ? `/bosses/${item.location}/${item.icon}?height=32&width=32`
+                            : `/characters/${item.element}/${item.icon}?height=32&width=32`
+                        }
+                        alt={item.name}
+                        width={32}
+                        height={32}
+                        className="object-cover rounded-full"
+                      />
                       {item.name}
                     </Label>
                     <Switch

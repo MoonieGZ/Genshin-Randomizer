@@ -79,7 +79,7 @@ export default function ExcludedCharacters() {
                     <div className="text-center">
                       <p className="text-sm font-medium truncate">{character.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {character.rarity === "5" ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
+                        {character.rarity === 5 ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
                       </p>
                     </div>
                   </CardContent>

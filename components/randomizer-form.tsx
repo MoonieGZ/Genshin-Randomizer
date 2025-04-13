@@ -17,7 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 type RandomResult = {
   characters: Array<{
     name: string
-    rarity: string
+    rarity: number
     element: string
     icon: string
     selected?: boolean
@@ -294,7 +294,7 @@ export default function RandomizerForm() {
                                 {character.name}
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                {character.rarity === "5" ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
+                                {character.rarity === 5 ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
                               </p>
                             </div>
                           </CardContent>
