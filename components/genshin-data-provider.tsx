@@ -13,6 +13,7 @@ export type Character = {
 export type Boss = {
   name: string
   region: string
+  link: string
 }
 
 // Update the Settings type to include excluded characters and the exclusion toggle
@@ -27,6 +28,9 @@ export type Settings = {
     enabled: Record<string, boolean>
   }
   enableExclusion: boolean
+  rules: {
+    coopMode: boolean
+  }
 }
 
 // Update the GenshinDataContextType to include new functions
@@ -42,6 +46,7 @@ type GenshinDataContextType = {
   excludeCharacter: (name: string) => void
   includeCharacter: (name: string) => void
   toggleExclusion: (enabled: boolean) => void
+  toggleCoopMode: (enabled: boolean) => void
 }
 
 const GenshinDataContext = createContext<GenshinDataContextType | undefined>(undefined)
@@ -61,6 +66,9 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
       enabled: {},
     },
     enableExclusion: true,
+    rules: {
+      coopMode: false,
+    },
   })
 
   useEffect(() => {
@@ -185,6 +193,16 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     }))
   }
 
+  const toggleCoopMode = (enabled: boolean) => {
+    setSettings((prev) => ({
+      ...prev,
+      rules: {
+        ...prev.rules,
+        coopMode: enabled,
+      },
+    }))
+  }
+
   return (
     <GenshinDataContext.Provider
       value={{
@@ -199,6 +217,7 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         excludeCharacter,
         includeCharacter,
         toggleExclusion,
+        toggleCoopMode,
       }}
     >
       {children}

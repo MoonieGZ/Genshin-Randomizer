@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { Checkbox } from "@/components/ui/checkbox"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 type RandomResult = {
   characters: Array<{
@@ -25,6 +26,7 @@ type RandomResult = {
     name: string
     icon: string
     location: string
+    link: string
   }>
 }
 
@@ -69,11 +71,46 @@ export default function RandomizerForm() {
     const shuffledCharacters = [...enabledCharacters].sort(() => Math.random() - 0.5)
     const shuffledBosses = [...enabledBosses].sort(() => Math.random() - 0.5)
 
-    // Take the required number of items
-    const selectedCharacters =
-      type === "bosses"
-        ? []
-        : shuffledCharacters.slice(0, settings.characters.count).map((char) => ({ ...char, selected: false }))
+    // Apply co-op mode rule if needed
+    let selectedCharacters: any[] = []
+    if (type === "characters") {
+      if (!settings.rules.coopMode) {
+        // If co-op mode is disabled, ensure only one Traveler is selected
+        const travelerElements = new Set<string>()
+        selectedCharacters = []
+
+        for (const char of shuffledCharacters) {
+          // If this is a Traveler, check if we already have one
+          if (char.name.startsWith("Traveler (")) {
+            const element = char.name.match(/$$([^)]+)$$/)?.[1] || ""
+            if (travelerElements.size > 0) {
+              // Skip this Traveler if we already have one
+              continue
+            }
+            travelerElements.add(element)
+          }
+
+          selectedCharacters.push({ ...char, selected: false })
+          if (selectedCharacters.length >= settings.characters.count) break
+        }
+
+        // If we couldn't get enough characters, try again without the restriction
+        if (
+          selectedCharacters.length < settings.characters.count &&
+          selectedCharacters.length < shuffledCharacters.length
+        ) {
+          selectedCharacters = shuffledCharacters
+            .slice(0, settings.characters.count)
+            .map((char) => ({ ...char, selected: false }))
+        }
+      } else {
+        // Co-op mode enabled, no restrictions
+        selectedCharacters = shuffledCharacters
+          .slice(0, settings.characters.count)
+          .map((char) => ({ ...char, selected: false }))
+      }
+    }
+
     const selectedBosses = type === "characters" ? [] : shuffledBosses.slice(0, settings.bosses.count)
 
     setResult({
@@ -119,6 +156,10 @@ export default function RandomizerForm() {
     })
 
     setOpen(false)
+  }
+
+  const handleBossClick = (link: string) => {
+    window.open(link, "_blank", "noopener,noreferrer")
   }
 
   return (
@@ -170,106 +211,112 @@ export default function RandomizerForm() {
           </DialogHeader>
 
           {result && (
-            <div className="space-y-6">
-              {result.bosses.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Bosses ({result.bosses.length})</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {result.bosses.map((boss) => (
-                      <Card key={boss.name} className="overflow-hidden">
-                        <CardContent className="p-3 space-y-2">
-                          <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
-                            <div className="absolute top-0 right-0 z-10">
-                              <Badge variant="outline" className="m-1">
-                                {boss.location}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center justify-center h-full">
-                              <Image
-                                src={`/bosses/${boss.location}/${boss.icon}?height=80&width=80&text=${encodeURIComponent(boss.name)}`}
-                                alt={boss.name}
-                                width={80}
-                                height={80}
-                                className="object-cover"
-                              />
-                            </div>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
-                              {boss.name}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {result.characters.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Characters ({result.characters.length})</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {result.characters.map((character, index) => (
-                      <Card
-                        key={character.name}
-                        className={`overflow-hidden cursor-pointer ${character.selected ? "ring-2 ring-primary" : ""}`}
-                        onClick={() => settings.enableExclusion && toggleCharacterSelection(index)}
-                      >
-                        <CardContent className="p-3 space-y-2">
-                          <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
-                            <div className="absolute top-0 right-0 z-10">
-                              <Badge variant="secondary" className="m-1">
-                                {character.element}
-                              </Badge>
-                            </div>
-                            {settings.enableExclusion && (
-                              <div className="absolute top-0 left-0 z-10 m-1">
-                                <Checkbox
-                                  checked={character.selected}
-                                  onCheckedChange={() => toggleCharacterSelection(index)}
-                                  id={`select-${character.name}`}
-                                  onClick={(e) => e.stopPropagation()}
+            <ScrollArea className="max-h-[70vh]">
+              <div className="space-y-6 p-1">
+                {result.bosses.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Bosses ({result.bosses.length})</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {result.bosses.map((boss) => (
+                        <Card
+                          key={boss.name}
+                          className="overflow-hidden cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                          onClick={() => handleBossClick(boss.link)}
+                        >
+                          <CardContent className="p-3 space-y-2">
+                            <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
+                              <div className="absolute top-0 right-0 z-10">
+                                <Badge variant="outline" className="m-1">
+                                  {boss.location}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center justify-center h-full">
+                                <Image
+                                  src={`/bosses/${boss.location}/${boss.icon}?height=80&width=80&text=${encodeURIComponent(boss.name)}`}
+                                  alt={boss.name}
+                                  width={80}
+                                  height={80}
+                                  className="object-cover"
                                 />
                               </div>
-                            )}
-                            <div className="flex items-center justify-center h-full">
-                              <Image
-                                src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
-                                alt={character.name}
-                                width={80}
-                                height={80}
-                                className="object-cover"
-                              />
                             </div>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
-                              {character.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {character.rarity === "5" ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                            <div className="text-center">
+                              <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
+                                {boss.name}
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              <div className="flex justify-end">
-                <Button
-                  onClick={
-                    randomizeType === "bosses" || !settings.enableExclusion
-                      ? () => setOpen(false)
-                      : handleAcceptSelected
-                  }
-                >
-                  {randomizeType === "bosses" || !settings.enableExclusion ? "Close" : "Accept"}
-                </Button>
+                {result.characters.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Characters ({result.characters.length})</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {result.characters.map((character, index) => (
+                        <Card
+                          key={character.name}
+                          className={`overflow-hidden cursor-pointer ${character.selected ? "ring-2 ring-primary" : ""}`}
+                          onClick={() => settings.enableExclusion && toggleCharacterSelection(index)}
+                        >
+                          <CardContent className="p-3 space-y-2">
+                            <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
+                              <div className="absolute top-0 right-0 z-10">
+                                <Badge variant="secondary" className="m-1">
+                                  {character.element}
+                                </Badge>
+                              </div>
+                              {settings.enableExclusion && (
+                                <div className="absolute top-0 left-0 z-10 m-1">
+                                  <Checkbox
+                                    checked={character.selected}
+                                    onCheckedChange={() => toggleCharacterSelection(index)}
+                                    id={`select-${character.name}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </div>
+                              )}
+                              <div className="flex items-center justify-center h-full">
+                                <Image
+                                  src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
+                                  alt={character.name}
+                                  width={80}
+                                  height={80}
+                                  className="object-cover"
+                                />
+                              </div>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
+                                {character.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {character.rarity === "5" ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-end">
+                  <Button
+                    onClick={
+                      randomizeType === "bosses" || !settings.enableExclusion
+                        ? () => setOpen(false)
+                        : handleAcceptSelected
+                    }
+                  >
+                    {randomizeType === "bosses" || !settings.enableExclusion ? "Close" : "Accept"}
+                  </Button>
+                </div>
               </div>
-            </div>
+            </ScrollArea>
           )}
         </DialogContent>
       </Dialog>

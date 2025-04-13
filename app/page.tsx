@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import { Settings, Github } from "lucide-react"
 import RandomizerForm from "@/components/randomizer-form"
+import AcceptedCharacters from "@/components/accepted-characters"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function Home() {
   return (
@@ -11,6 +13,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Genshin Impact Randomizer</h1>
           <div className="flex items-center space-x-2">
+            <ThemeToggle />
             <Link href="https://github.com/MoonieGZ/Genshin-Randomizer" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="icon">
                 <Github className="h-5 w-5" />
@@ -33,6 +36,8 @@ export default function Home() {
             <RandomizerForm />
           </CardContent>
         </Card>
+
+        <AcceptedCharacters />
       </main>
 
       <footer className="border-t py-4">
