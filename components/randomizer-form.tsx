@@ -81,29 +81,26 @@ export default function RandomizerForm() {
       let filteredCharacters = [...shuffledCharacters]
 
       if (!settings.rules.coopMode) {
-        // If co-op mode is disabled, ensure only one Traveler is selected
-        const travelerElements = new Set<string>()
-        const nonTravelerCharacters: any[] = []
-        let selectedTraveler: any = null
-
-        // Process all characters to handle Travelers specially
-        for (const char of shuffledCharacters) {
-          if (char.name.startsWith("Traveler (")) {
-            const element = char.name.match(/$$([^)]+)$$/)?.[1] || ""
-            // If we haven't selected a Traveler yet, select this one
-            if (travelerElements.size === 0) {
-              travelerElements.add(element)
-              selectedTraveler = char
-            }
-            // Otherwise skip this Traveler
-          } else {
-            nonTravelerCharacters.push(char)
-          }
+        const travelerCharacters = shuffledCharacters.filter(char => char.name.startsWith("Traveler ("))
+        const nonTravelerCharacters = shuffledCharacters.filter(char => !char.name.startsWith("Traveler ("))
+      
+        let filteredCharacters = nonTravelerCharacters
+      
+        if (travelerCharacters.length > 0) {
+          // Pick a random Traveler from the remaining eligible ones
+          const selectedTraveler = travelerCharacters[Math.floor(Math.random() * travelerCharacters.length)]
+          filteredCharacters.push(selectedTraveler) // Add it at the end, or you can push to a random spot
         }
-
-        // Combine the selected Traveler (if any) with non-Traveler characters
-        filteredCharacters = selectedTraveler ? [selectedTraveler, ...nonTravelerCharacters] : nonTravelerCharacters
-      }
+      
+        // Shuffle final result so no fixed positions
+        filteredCharacters = filteredCharacters.sort(() => Math.random() - 0.5)
+        
+        // Update the filtered list
+        filteredCharacters = filteredCharacters.slice(0, settings.characters.count)
+      
+      } else {
+        filteredCharacters = shuffledCharacters.slice(0, settings.characters.count)
+      }      
 
       // Now apply 5-star character limit rule if enabled
       if (settings.rules.limitFiveStars) {
