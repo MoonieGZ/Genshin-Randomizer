@@ -33,6 +33,8 @@ export type Settings = {
   enableExclusion: boolean
   rules: {
     coopMode: boolean
+    limitFiveStars: boolean
+    maxFiveStars: number
   }
 }
 
@@ -50,6 +52,8 @@ type GenshinDataContextType = {
   includeCharacter: (name: string) => void
   toggleExclusion: (enabled: boolean) => void
   toggleCoopMode: (enabled: boolean) => void
+  toggleLimitFiveStars: (enabled: boolean) => void
+  updateMaxFiveStars: (count: number) => void
 }
 
 const GenshinDataContext = createContext<GenshinDataContextType | undefined>(undefined)
@@ -71,6 +75,8 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     enableExclusion: true,
     rules: {
       coopMode: false,
+      limitFiveStars: false,
+      maxFiveStars: 2,
     },
   })
 
@@ -206,6 +212,26 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     }))
   }
 
+  const toggleLimitFiveStars = (enabled: boolean) => {
+    setSettings((prev) => ({
+      ...prev,
+      rules: {
+        ...prev.rules,
+        limitFiveStars: enabled,
+      },
+    }))
+  }
+
+  const updateMaxFiveStars = (count: number) => {
+    setSettings((prev) => ({
+      ...prev,
+      rules: {
+        ...prev.rules,
+        maxFiveStars: count,
+      },
+    }))
+  }
+
   return (
     <GenshinDataContext.Provider
       value={{
@@ -221,6 +247,8 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         includeCharacter,
         toggleExclusion,
         toggleCoopMode,
+        toggleLimitFiveStars,
+        updateMaxFiveStars,
       }}
     >
       {children}

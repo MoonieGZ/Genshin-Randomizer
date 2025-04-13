@@ -71,43 +71,79 @@ export default function RandomizerForm() {
     const shuffledCharacters = [...enabledCharacters].sort(() => Math.random() - 0.5)
     const shuffledBosses = [...enabledBosses].sort(() => Math.random() - 0.5)
 
-    // Apply co-op mode rule if needed
+    // Apply rules for character selection
     let selectedCharacters: any[] = []
     if (type === "characters") {
+      // First, apply co-op mode rule to filter out multiple Travelers if needed
+      let filteredCharacters = [...shuffledCharacters]
+
       if (!settings.rules.coopMode) {
         // If co-op mode is disabled, ensure only one Traveler is selected
         const travelerElements = new Set<string>()
-        selectedCharacters = []
+        const nonTravelerCharacters: any[] = []
+        let selectedTraveler: any = null
 
+        // Process all characters to handle Travelers specially
         for (const char of shuffledCharacters) {
-          // If this is a Traveler, check if we already have one
           if (char.name.startsWith("Traveler (")) {
             const element = char.name.match(/$$([^)]+)$$/)?.[1] || ""
-            if (travelerElements.size > 0) {
-              // Skip this Traveler if we already have one
-              continue
+            // If we haven't selected a Traveler yet, select this one
+            if (travelerElements.size === 0) {
+              travelerElements.add(element)
+              selectedTraveler = char
             }
-            travelerElements.add(element)
+            // Otherwise skip this Traveler
+          } else {
+            nonTravelerCharacters.push(char)
           }
-
-          selectedCharacters.push({ ...char, selected: false })
-          if (selectedCharacters.length >= settings.characters.count) break
         }
 
-        // If we couldn't get enough characters, try again without the restriction
-        if (
-          selectedCharacters.length < settings.characters.count &&
-          selectedCharacters.length < shuffledCharacters.length
-        ) {
-          selectedCharacters = shuffledCharacters
-            .slice(0, settings.characters.count)
-            .map((char) => ({ ...char, selected: false }))
-        }
+        // Combine the selected Traveler (if any) with non-Traveler characters
+        filteredCharacters = selectedTraveler ? [selectedTraveler, ...nonTravelerCharacters] : nonTravelerCharacters
+      }
+
+      // Now apply 5-star character limit rule if enabled
+      if (settings.rules.limitFiveStars) {
+        const fiveStarCharacters: any[] = []
+        const fourStarCharacters: any[] = []
+
+        // Separate 5-star and 4-star characters from the filtered list
+        filteredCharacters.forEach((char) => {
+          if (char.rarity === 5) {
+            fiveStarCharacters.push(char)
+          } else {
+            fourStarCharacters.push(char)
+          }
+        })
+
+        // Take limited number of 5-star characters
+        const selectedFiveStars = fiveStarCharacters.slice(
+          0,
+          Math.min(settings.rules.maxFiveStars, settings.characters.count),
+        )
+
+        // Fill the rest with 4-star characters
+        const remainingSlots = settings.characters.count - selectedFiveStars.length
+        const selectedFourStars = fourStarCharacters.slice(0, remainingSlots)
+
+        // Combine and shuffle again
+        selectedCharacters = [...selectedFiveStars, ...selectedFourStars]
+          .sort(() => Math.random() - 0.5)
+          .map((char) => ({ ...char, selected: false }))
       } else {
-        // Co-op mode enabled, no restrictions
-        selectedCharacters = shuffledCharacters
+        // No 5-star limit, just take the filtered characters
+        selectedCharacters = filteredCharacters
           .slice(0, settings.characters.count)
           .map((char) => ({ ...char, selected: false }))
+      }
+
+      // Check if we have enough characters after applying all rules
+      if (selectedCharacters.length < settings.characters.count) {
+        toast({
+          title: "Not enough characters available",
+          description: `Could only select ${selectedCharacters.length} characters after applying all rules. Consider adjusting your settings.`,
+          variant: "destructive",
+        })
       }
     }
 

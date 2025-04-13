@@ -7,6 +7,7 @@ import SettingsForm from "@/components/settings-form"
 import ExcludedCharacters from "@/components/excluded-characters"
 import RulesSettings from "@/components/rules-settings"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { VersionFooter } from "@/components/version-footer"
 
 export default function SettingsPage({ searchParams }: { searchParams: { tab?: string } }) {
   const defaultTab = searchParams.tab || "characters"
@@ -54,6 +55,9 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
               <TabsContent value="bosses" className="mt-4">
                 <SettingsForm type="bosses" />
               </TabsContent>
+              <TabsContent value="bosses" className="mt-4">
+                <SettingsForm type="bosses" />
+              </TabsContent>
               <TabsContent value="excluded" className="mt-4">
                 <ExcludedCharacters />
               </TabsContent>
@@ -66,7 +70,9 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
       </main>
 
       <footer className="border-t py-4">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">Moons &copy; 2025</div>
+        <div className="container mx-auto px-4">
+          <VersionFooter />
+        </div>
       </footer>
     </div>
   )

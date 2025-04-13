@@ -5,6 +5,8 @@ import { Settings, Github } from "lucide-react"
 import RandomizerForm from "@/components/randomizer-form"
 import AcceptedCharacters from "@/components/accepted-characters"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { VersionFooter } from "@/components/version-footer"
+import { ActiveRulesDisplay } from "@/components/active-rules-display"
 
 export default function Home() {
   return (
@@ -32,8 +34,9 @@ export default function Home() {
 
       <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center justify-center">
         <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
+          <CardContent className="pt-6 space-y-2">
             <RandomizerForm />
+            <ActiveRulesDisplay />
           </CardContent>
         </Card>
 
@@ -41,7 +44,9 @@ export default function Home() {
       </main>
 
       <footer className="border-t py-4">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">Moons &copy; 2025</div>
+        <div className="container mx-auto px-4">
+          <VersionFooter />
+        </div>
       </footer>
     </div>
   )
