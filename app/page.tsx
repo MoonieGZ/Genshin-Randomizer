@@ -7,6 +7,7 @@ import AcceptedCharacters from "@/components/accepted-characters"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { VersionFooter } from "@/components/version-footer"
 import { ActiveRulesDisplay } from "@/components/active-rules-display"
+import { PoolInfo } from "@/components/pool-info"
 
 export default function Home() {
   return (
@@ -35,6 +36,7 @@ export default function Home() {
       <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 space-y-2">
+            <PoolInfo />
             <RandomizerForm />
             <ActiveRulesDisplay />
           </CardContent>

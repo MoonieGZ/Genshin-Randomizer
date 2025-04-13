@@ -20,7 +20,7 @@ export default function RulesSettings() {
         <CardHeader>
           <CardTitle>Co-op Mode</CardTitle>
           <CardDescription>
-            Controls whether multiple Travelers with different elements can be selected in the same roll
+            Controls whether multiple Travelers with different elements can be selected in a single roll
           </CardDescription>
         </CardHeader>
         <CardContent>
