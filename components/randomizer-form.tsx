@@ -97,10 +97,9 @@ export default function RandomizerForm() {
         
         // Update the filtered list
         filteredCharacters = filteredCharacters.slice(0, settings.characters.count)
-      
       } else {
         filteredCharacters = shuffledCharacters.slice(0, settings.characters.count)
-      }      
+      }
 
       // Now apply 5-star character limit rule if enabled
       if (settings.rules.limitFiveStars) {
