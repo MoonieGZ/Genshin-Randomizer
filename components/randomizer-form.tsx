@@ -5,7 +5,7 @@ import { useGenshinData } from "./genshin-data-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Dice5 } from "lucide-react"
+import { Dice5, Dices } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -34,119 +34,141 @@ export default function RandomizerForm() {
   const { characters, bosses, settings, updateCharacterCount, updateBossCount, excludeCharacter } = useGenshinData()
   const [result, setResult] = useState<RandomResult | null>(null)
   const [open, setOpen] = useState(false)
-  const [randomizeType, setRandomizeType] = useState<"characters" | "bosses">("characters")
+  const [randomizeType, setRandomizeType] = useState<"characters" | "bosses" | "combined">("characters")
   const { toast } = useToast()
 
   // Check if all characters are currently selected
   const areAllCharactersSelected = result?.characters.every((char) => char.selected) || false
 
-  const handleRandomize = (type: "characters" | "bosses") => {
-    setRandomizeType(type)
-
-    // Filter enabled characters and bosses
+  const getRandomizedCharacters = () => {
+    // Filter enabled characters
     const enabledCharacters = characters.filter(
       (char) =>
         settings.characters.enabled[char.name] &&
         (!settings.enableExclusion || !settings.characters.excluded.includes(char.name)),
     )
-    const enabledBosses = bosses.filter((boss) => settings.bosses.enabled[boss.name])
 
-    // Check if we have enough enabled items
-    if (type === "characters" && enabledCharacters.length < settings.characters.count) {
+    // Check if we have enough enabled characters
+    if (enabledCharacters.length < settings.characters.count) {
       toast({
         title: "Not enough characters enabled",
         description: `Please enable at least ${settings.characters.count} characters in settings.`,
         variant: "destructive",
       })
-      return
+      return null
     }
 
-    if (type === "bosses" && enabledBosses.length < settings.bosses.count) {
+    // Shuffle characters
+    const shuffledCharacters = [...enabledCharacters].sort(() => Math.random() - 0.5)
+
+    // Apply rules for character selection
+    let filteredCharacters = [...shuffledCharacters]
+
+    // Apply co-op mode rule if needed
+    if (!settings.rules.coopMode) {
+      const travelerCharacters = shuffledCharacters.filter((char) => char.name.startsWith("Traveler ("))
+      const nonTravelerCharacters = shuffledCharacters.filter((char) => !char.name.startsWith("Traveler ("))
+
+      filteredCharacters = nonTravelerCharacters
+
+      if (travelerCharacters.length > 0) {
+        // Pick a random Traveler from the remaining eligible ones
+        const selectedTraveler = travelerCharacters[Math.floor(Math.random() * travelerCharacters.length)]
+        filteredCharacters.push(selectedTraveler)
+      }
+
+      // Shuffle final result so no fixed positions
+      filteredCharacters = filteredCharacters.sort(() => Math.random() - 0.5)
+
+      // Update the filtered list
+      filteredCharacters = filteredCharacters.slice(0, settings.characters.count)
+    } else {
+      filteredCharacters = shuffledCharacters.slice(0, settings.characters.count)
+    }
+
+    // Apply 5-star character limit rule if enabled
+    let selectedCharacters: any[] = []
+    if (settings.rules.limitFiveStars) {
+      const fiveStarCharacters: any[] = []
+      const fourStarCharacters: any[] = []
+
+      // Separate 5-star and 4-star characters from the filtered list
+      filteredCharacters.forEach((char) => {
+        if (char.rarity === 5) {
+          fiveStarCharacters.push(char)
+        } else {
+          fourStarCharacters.push(char)
+        }
+      })
+
+      // Take limited number of 5-star characters
+      const selectedFiveStars = fiveStarCharacters.slice(
+        0,
+        Math.min(settings.rules.maxFiveStars, settings.characters.count),
+      )
+
+      // Fill the rest with 4-star characters
+      const remainingSlots = settings.characters.count - selectedFiveStars.length
+      const selectedFourStars = fourStarCharacters.slice(0, remainingSlots)
+
+      // Combine and shuffle again
+      selectedCharacters = [...selectedFiveStars, ...selectedFourStars]
+        .sort(() => Math.random() - 0.5)
+        .map((char) => ({ ...char, selected: false }))
+    } else {
+      // No 5-star limit, just take the filtered characters
+      selectedCharacters = filteredCharacters.map((char) => ({ ...char, selected: false }))
+    }
+
+    // Check if we have enough characters after applying all rules
+    if (selectedCharacters.length < settings.characters.count) {
+      toast({
+        title: "Not enough characters available",
+        description: `Could only select ${selectedCharacters.length} characters after applying all rules. Consider adjusting your settings.`,
+        variant: "destructive",
+      })
+    }
+
+    return selectedCharacters
+  }
+
+  const getRandomizedBosses = () => {
+    // Filter enabled bosses
+    const enabledBosses = bosses.filter((boss) => settings.bosses.enabled[boss.name])
+
+    // Check if we have enough enabled bosses
+    if (enabledBosses.length < settings.bosses.count) {
       toast({
         title: "Not enough bosses enabled",
         description: `Please enable at least ${settings.bosses.count} bosses in settings.`,
         variant: "destructive",
       })
-      return
+      return null
     }
 
-    // Shuffle arrays
-    const shuffledCharacters = [...enabledCharacters].sort(() => Math.random() - 0.5)
-    const shuffledBosses = [...enabledBosses].sort(() => Math.random() - 0.5)
+    // Shuffle and select bosses
+    const selectedBosses = [...enabledBosses].sort(() => Math.random() - 0.5).slice(0, settings.bosses.count)
 
-    // Apply rules for character selection
+    return selectedBosses
+  }
+
+  const handleRandomize = (type: "characters" | "bosses" | "combined") => {
+    setRandomizeType(type)
+
     let selectedCharacters: any[] = []
-    if (type === "characters") {
-      // First, apply co-op mode rule to filter out multiple Travelers if needed
-      let filteredCharacters = [...shuffledCharacters]
+    let selectedBosses: any[] = []
 
-      if (!settings.rules.coopMode) {
-        const travelerCharacters = shuffledCharacters.filter(char => char.name.startsWith("Traveler ("))
-        const nonTravelerCharacters = shuffledCharacters.filter(char => !char.name.startsWith("Traveler ("))
-      
-        let filteredCharacters = nonTravelerCharacters
-      
-        if (travelerCharacters.length > 0) {
-          // Pick a random Traveler from the remaining eligible ones
-          const selectedTraveler = travelerCharacters[Math.floor(Math.random() * travelerCharacters.length)]
-          filteredCharacters.push(selectedTraveler) // Add it at the end, or you can push to a random spot
-        }
-      
-        // Shuffle final result so no fixed positions
-        filteredCharacters = filteredCharacters.sort(() => Math.random() - 0.5)
-        
-        // Update the filtered list
-        filteredCharacters = filteredCharacters.slice(0, settings.characters.count)
-      } else {
-        filteredCharacters = shuffledCharacters.slice(0, settings.characters.count)
-      }
-
-      // Now apply 5-star character limit rule if enabled
-      if (settings.rules.limitFiveStars) {
-        const fiveStarCharacters: any[] = []
-        const fourStarCharacters: any[] = []
-
-        // Separate 5-star and 4-star characters from the filtered list
-        filteredCharacters.forEach((char) => {
-          if (char.rarity === 5) {
-            fiveStarCharacters.push(char)
-          } else {
-            fourStarCharacters.push(char)
-          }
-        })
-
-        // Take limited number of 5-star characters
-        const selectedFiveStars = fiveStarCharacters.slice(
-          0,
-          Math.min(settings.rules.maxFiveStars, settings.characters.count),
-        )
-
-        // Fill the rest with 4-star characters
-        const remainingSlots = settings.characters.count - selectedFiveStars.length
-        const selectedFourStars = fourStarCharacters.slice(0, remainingSlots)
-
-        // Combine and shuffle again
-        selectedCharacters = [...selectedFiveStars, ...selectedFourStars]
-          .sort(() => Math.random() - 0.5)
-          .map((char) => ({ ...char, selected: false }))
-      } else {
-        // No 5-star limit, just take the filtered characters
-        selectedCharacters = filteredCharacters
-          .slice(0, settings.characters.count)
-          .map((char) => ({ ...char, selected: false }))
-      }
-
-      // Check if we have enough characters after applying all rules
-      if (selectedCharacters.length < settings.characters.count) {
-        toast({
-          title: "Not enough characters available",
-          description: `Could only select ${selectedCharacters.length} characters after applying all rules. Consider adjusting your settings.`,
-          variant: "destructive",
-        })
-      }
+    if (type === "characters" || type === "combined") {
+      const characters = getRandomizedCharacters()
+      if (!characters) return // Error occurred
+      selectedCharacters = characters
     }
 
-    const selectedBosses = type === "characters" ? [] : shuffledBosses.slice(0, settings.bosses.count)
+    if (type === "bosses" || type === "combined") {
+      const bosses = getRandomizedBosses()
+      if (!bosses) return // Error occurred
+      selectedBosses = bosses
+    }
 
     setResult({
       characters: selectedCharacters,
@@ -211,7 +233,7 @@ export default function RandomizerForm() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -251,6 +273,11 @@ export default function RandomizerForm() {
           </Button>
         </div>
       </div>
+
+      <Button onClick={() => handleRandomize("combined")} className="w-full">
+        <Dices className="mr-2 h-4 w-4" />
+        Roll Both
+      </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
@@ -353,19 +380,23 @@ export default function RandomizerForm() {
                 )}
 
                 <div className="flex justify-end space-x-2">
-                  {randomizeType === "characters" && settings.enableExclusion && (
-                    <Button variant="outline" onClick={toggleAllCharacters}>
-                      {areAllCharactersSelected ? "Unselect All" : "Select All"}
-                    </Button>
-                  )}
+                  {(randomizeType === "characters" || randomizeType === "combined") &&
+                    result.characters.length > 0 &&
+                    settings.enableExclusion && (
+                      <Button variant="outline" onClick={toggleAllCharacters}>
+                        {areAllCharactersSelected ? "Unselect All" : "Select All"}
+                      </Button>
+                    )}
                   <Button
                     onClick={
-                      randomizeType === "bosses" || !settings.enableExclusion
+                      randomizeType === "bosses" || !settings.enableExclusion || result.characters.length === 0
                         ? () => setOpen(false)
                         : handleAcceptSelected
                     }
                   >
-                    {randomizeType === "bosses" || !settings.enableExclusion ? "Close" : "Accept"}
+                    {randomizeType === "bosses" || !settings.enableExclusion || result.characters.length === 0
+                      ? "Close"
+                      : "Accept"}
                   </Button>
                 </div>
               </div>
