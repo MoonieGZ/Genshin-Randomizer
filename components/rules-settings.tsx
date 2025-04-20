@@ -6,9 +6,35 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ActiveRulesDisplay } from "./active-rules-display"
+import { useState } from "react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export default function RulesSettings() {
-  const { settings, toggleCoopMode, toggleLimitFiveStars, updateMaxFiveStars } = useGenshinData()
+  const { settings, toggleCoopMode, toggleLimitFiveStars, updateMaxFiveStars, getNonCoopBosses } = useGenshinData()
+  const [showCoopConfirmation, setShowCoopConfirmation] = useState(false)
+  const nonCoopBosses = getNonCoopBosses()
+
+  const handleCoopToggle = (enabled: boolean) => {
+    if (enabled && nonCoopBosses.length > 0) {
+      setShowCoopConfirmation(true)
+    } else {
+      toggleCoopMode(enabled)
+    }
+  }
+
+  const confirmCoopMode = () => {
+    toggleCoopMode(true)
+    setShowCoopConfirmation(false)
+  }
 
   return (
     <div className="space-y-6">
@@ -25,7 +51,7 @@ export default function RulesSettings() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-2">
-            <Switch id="coop-mode" checked={settings.rules.coopMode} onCheckedChange={toggleCoopMode} />
+            <Switch id="coop-mode" checked={settings.rules.coopMode} onCheckedChange={handleCoopToggle} />
             <Label htmlFor="coop-mode">
               {settings.rules.coopMode
                 ? "Enabled: Multiple Travelers with different elements can be selected"
@@ -72,6 +98,28 @@ export default function RulesSettings() {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={showCoopConfirmation} onOpenChange={setShowCoopConfirmation}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disable Non-Co-op Bosses?</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              Enabling Co-op mode will disable the following bosses that don't support co-op play:
+              <ul className="list-disc pl-6 max-h-60 overflow-y-auto">
+                {nonCoopBosses.map((boss) => (
+                  <li key={boss.name}>{boss.name}</li>
+                ))}
+              </ul>
+              These bosses will be automatically disabled in your settings.
+              Do you want to continue?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCoopMode}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

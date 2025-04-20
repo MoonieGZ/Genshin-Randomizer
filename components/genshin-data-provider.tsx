@@ -17,6 +17,7 @@ export type Boss = {
   icon: string
   location: string
   link: string
+  coop: boolean
 }
 
 // Update the Settings type to include excluded characters and the exclusion toggle
@@ -54,6 +55,7 @@ type GenshinDataContextType = {
   toggleCoopMode: (enabled: boolean) => void
   toggleLimitFiveStars: (enabled: boolean) => void
   updateMaxFiveStars: (count: number) => void
+  getNonCoopBosses: () => Boss[]
 }
 
 const GenshinDataContext = createContext<GenshinDataContextType | undefined>(undefined)
@@ -106,10 +108,10 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
       .then((res) => res.json())
       .then((data: Boss[]) => {
         setBosses(data)
-        // Initialize all bosses as enabled
+        // Initialize bosses with "⭐" in the name as disabled, others as enabled
         const enabledBosses: Record<string, boolean> = {}
         data.forEach((boss) => {
-          enabledBosses[boss.name] = true
+          enabledBosses[boss.name] = !boss.name.startsWith("⭐")
         })
         setSettings((prev) => ({
           ...prev,
@@ -202,14 +204,43 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     }))
   }
 
+  const getNonCoopBosses = () => {
+    return bosses.filter((boss) => !boss.coop && settings.bosses.enabled[boss.name])
+  }
+
   const toggleCoopMode = (enabled: boolean) => {
-    setSettings((prev) => ({
-      ...prev,
-      rules: {
-        ...prev.rules,
-        coopMode: enabled,
-      },
-    }))
+    // If enabling co-op mode, disable all non-co-op bosses
+    if (enabled) {
+      const updatedEnabledBosses = { ...settings.bosses.enabled }
+
+      // Disable all non-co-op bosses
+      bosses.forEach((boss) => {
+        if (!boss.coop) {
+          updatedEnabledBosses[boss.name] = false
+        }
+      })
+
+      setSettings((prev) => ({
+        ...prev,
+        rules: {
+          ...prev.rules,
+          coopMode: enabled,
+        },
+        bosses: {
+          ...prev.bosses,
+          enabled: updatedEnabledBosses,
+        },
+      }))
+    } else {
+      // Just toggle the co-op mode without affecting bosses
+      setSettings((prev) => ({
+        ...prev,
+        rules: {
+          ...prev.rules,
+          coopMode: enabled,
+        },
+      }))
+    }
   }
 
   const toggleLimitFiveStars = (enabled: boolean) => {
@@ -249,6 +280,7 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         toggleCoopMode,
         toggleLimitFiveStars,
         updateMaxFiveStars,
+        getNonCoopBosses,
       }}
     >
       {children}

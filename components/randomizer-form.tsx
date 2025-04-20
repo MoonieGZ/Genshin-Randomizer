@@ -27,6 +27,7 @@ type RandomResult = {
     icon: string
     location: string
     link: string
+    coop: boolean
   }>
 }
 
@@ -134,7 +135,10 @@ export default function RandomizerForm() {
 
   const getRandomizedBosses = () => {
     // Filter enabled bosses
-    const enabledBosses = bosses.filter((boss) => settings.bosses.enabled[boss.name])
+    // If co-op mode is enabled, only include bosses with coop=true
+    const enabledBosses = bosses.filter(
+      (boss) => settings.bosses.enabled[boss.name] && (!settings.rules.coopMode || boss.coop),
+    )
 
     // Check if we have enough enabled bosses
     if (enabledBosses.length < settings.bosses.count) {
