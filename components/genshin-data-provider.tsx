@@ -39,6 +39,25 @@ export type Settings = {
   }
 }
 
+// Default settings
+const DEFAULT_SETTINGS: Settings = {
+  characters: {
+    count: 4,
+    enabled: {},
+    excluded: [],
+  },
+  bosses: {
+    count: 8,
+    enabled: {},
+  },
+  enableExclusion: true,
+  rules: {
+    coopMode: false,
+    limitFiveStars: false,
+    maxFiveStars: 2,
+  },
+}
+
 // Update the GenshinDataContextType to include new functions
 type GenshinDataContextType = {
   characters: Character[]
@@ -56,79 +75,142 @@ type GenshinDataContextType = {
   toggleLimitFiveStars: (enabled: boolean) => void
   updateMaxFiveStars: (count: number) => void
   getNonCoopBosses: () => Boss[]
+  disableLegendBosses: () => void
+  resetSettings: () => void
+  isLoading: boolean
 }
 
 const GenshinDataContext = createContext<GenshinDataContextType | undefined>(undefined)
+
+// Local Storage key
+const STORAGE_KEY = "genshin-randomizer-settings"
 
 // Update the initial state in the GenshinDataProvider
 export function GenshinDataProvider({ children }: { children: React.ReactNode }) {
   const [characters, setCharacters] = useState<Character[]>([])
   const [bosses, setBosses] = useState<Boss[]>([])
-  const [settings, setSettings] = useState<Settings>({
-    characters: {
-      count: 4,
-      enabled: {},
-      excluded: [],
-    },
-    bosses: {
-      count: 8,
-      enabled: {},
-    },
-    enableExclusion: true,
-    rules: {
-      coopMode: false,
-      limitFiveStars: false,
-      maxFiveStars: 2,
-    },
-  })
+  const [settings, setSettings] = useState<Settings>({ ...DEFAULT_SETTINGS })
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Save settings to Local Storage
+  const saveSettings = (newSettings: Settings) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings))
+    }
+  }
+
+  // Load settings from Local Storage
+  const loadSettings = (): Settings | null => {
+    if (typeof window !== "undefined") {
+      const savedSettings = localStorage.getItem(STORAGE_KEY)
+      if (savedSettings) {
+        try {
+          return JSON.parse(savedSettings)
+        } catch (error) {
+          console.error("Error parsing saved settings:", error)
+        }
+      }
+    }
+    return null
+  }
+
+  // Initialize character and boss data
+  const initializeData = (characters: Character[], bosses: Boss[], savedSettings: Settings | null) => {
+    // Initialize character enabled states
+    const enabledCharacters: Record<string, boolean> = {}
+    characters.forEach((character) => {
+      enabledCharacters[character.name] = savedSettings?.characters.enabled[character.name] ?? true
+    })
+
+    // Initialize boss enabled states
+    const enabledBosses: Record<string, boolean> = {}
+    bosses.forEach((boss) => {
+      // If we have saved settings, use those
+      if (savedSettings?.bosses.enabled[boss.name] !== undefined) {
+        enabledBosses[boss.name] = savedSettings.bosses.enabled[boss.name]
+      } else {
+        // Otherwise, disable legends by default
+        enabledBosses[boss.name] = !boss.name.startsWith("⭐")
+      }
+    })
+
+    // Create new settings object
+    const newSettings: Settings = {
+      characters: {
+        count: savedSettings?.characters.count ?? DEFAULT_SETTINGS.characters.count,
+        enabled: enabledCharacters,
+        excluded: savedSettings?.characters.excluded ?? [],
+      },
+      bosses: {
+        count: savedSettings?.bosses.count ?? DEFAULT_SETTINGS.bosses.count,
+        enabled: enabledBosses,
+      },
+      enableExclusion: savedSettings?.enableExclusion ?? DEFAULT_SETTINGS.enableExclusion,
+      rules: {
+        coopMode: savedSettings?.rules.coopMode ?? DEFAULT_SETTINGS.rules.coopMode,
+        limitFiveStars: savedSettings?.rules.limitFiveStars ?? DEFAULT_SETTINGS.rules.limitFiveStars,
+        maxFiveStars: savedSettings?.rules.maxFiveStars ?? DEFAULT_SETTINGS.rules.maxFiveStars,
+      },
+    }
+
+    // If co-op mode is enabled, disable non-co-op bosses
+    if (newSettings.rules.coopMode) {
+      bosses.forEach((boss) => {
+        if (!boss.coop) {
+          newSettings.bosses.enabled[boss.name] = false
+        }
+      })
+    }
+
+    setSettings(newSettings)
+    saveSettings(newSettings)
+    setIsLoading(false)
+  }
 
   useEffect(() => {
-    // Load characters data
-    fetch("/data/characters.json")
-      .then((res) => res.json())
-      .then((data: Character[]) => {
-        setCharacters(data)
-        // Initialize all characters as enabled
-        const enabledCharacters: Record<string, boolean> = {}
-        data.forEach((character) => {
-          enabledCharacters[character.name] = true
-        })
-        setSettings((prev) => ({
-          ...prev,
-          characters: {
-            ...prev.characters,
-            enabled: enabledCharacters,
-          },
-        }))
-      })
-      .catch((error) => console.error("Error loading characters:", error))
+    // Load data and settings
+    const loadData = async () => {
+      setIsLoading(true)
+      try {
+        // Load saved settings
+        const savedSettings = loadSettings()
 
-    // Load bosses data
-    fetch("/data/bosses.json")
-      .then((res) => res.json())
-      .then((data: Boss[]) => {
-        setBosses(data)
-        // Initialize bosses with "⭐" in the name as disabled, others as enabled
-        const enabledBosses: Record<string, boolean> = {}
-        data.forEach((boss) => {
-          enabledBosses[boss.name] = !boss.name.startsWith("⭐")
-        })
-        setSettings((prev) => ({
-          ...prev,
-          bosses: {
-            ...prev.bosses,
-            enabled: enabledBosses,
-          },
-        }))
-      })
-      .catch((error) => console.error("Error loading bosses:", error))
+        // Load characters data
+        const charactersResponse = await fetch("/data/characters.json")
+        const charactersData: Character[] = await charactersResponse.json()
+        setCharacters(charactersData)
+
+        // Load bosses data
+        const bossesResponse = await fetch("/data/bosses.json")
+        const bossesData: Boss[] = await bossesResponse.json()
+        setBosses(bossesData)
+
+        // Initialize settings
+        initializeData(charactersData, bossesData, savedSettings)
+      } catch (error) {
+        console.error("Error loading data:", error)
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
   }, [])
 
+  // Save settings whenever they change
+  useEffect(() => {
+    if (!isLoading) {
+      saveSettings(settings)
+    }
+  }, [settings, isLoading])
+
   const updateSettings = (newSettings: Partial<Settings>) => {
-    setSettings((prev) => ({
-      ...prev,
-      ...newSettings,
-    }))
+    setSettings((prev) => {
+      const updated = {
+        ...prev,
+        ...newSettings,
+      }
+      return updated
+    })
   }
 
   const updateCharacterEnabled = (name: string, enabled: boolean) => {
@@ -213,7 +295,6 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     if (enabled) {
       const updatedEnabledBosses = { ...settings.bosses.enabled }
 
-      // Disable all non-co-op bosses
       bosses.forEach((boss) => {
         if (!boss.coop) {
           updatedEnabledBosses[boss.name] = false
@@ -263,6 +344,29 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
     }))
   }
 
+  const disableLegendBosses = () => {
+    const updatedEnabledBosses = { ...settings.bosses.enabled }
+
+    bosses.forEach((boss) => {
+      if (boss.name.startsWith("⭐")) {
+        updatedEnabledBosses[boss.name] = false
+      }
+    })
+
+    setSettings((prev) => ({
+      ...prev,
+      bosses: {
+        ...prev.bosses,
+        enabled: updatedEnabledBosses,
+      },
+    }))
+  }
+
+  const resetSettings = () => {
+    // Re-initialize with default settings
+    initializeData(characters, bosses, null)
+  }
+
   return (
     <GenshinDataContext.Provider
       value={{
@@ -281,6 +385,9 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         toggleLimitFiveStars,
         updateMaxFiveStars,
         getNonCoopBosses,
+        disableLegendBosses,
+        resetSettings,
+        isLoading,
       }}
     >
       {children}

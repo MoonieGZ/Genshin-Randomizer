@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
@@ -8,8 +10,20 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { VersionFooter } from "@/components/version-footer"
 import { ActiveRulesDisplay } from "@/components/active-rules-display"
 import { PoolInfo } from "@/components/pool-info"
+import { useGenshinData } from "@/components/genshin-data-provider"
 
 export default function Home() {
+  const { isLoading } = useGenshinData()
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <p className="mt-4 text-muted-foreground">Loading data...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="border-b">

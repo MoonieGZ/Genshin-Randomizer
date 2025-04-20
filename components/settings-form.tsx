@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState } from "react"
 import Image from "next/image"
+import { Star } from "lucide-react"
 
 export default function SettingsForm({ type }: { type: "characters" | "bosses" }) {
-  const { characters, bosses, settings, updateCharacterEnabled, updateBossEnabled } = useGenshinData()
+  const { characters, bosses, settings, updateCharacterEnabled, updateBossEnabled, disableLegendBosses } =
+    useGenshinData()
   const [filter, setFilter] = useState("")
 
   const items = type === "characters" ? characters : bosses
@@ -78,8 +80,12 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
         <div className="flex items-center justify-between">
           <Label htmlFor={`${type}-filter`}>Filter {type}</Label>
           <div className="space-x-2">
+            {type === "bosses" && (
+              <Button variant="outline" size="sm" onClick={disableLegendBosses}>
+                Disable Legends
+              </Button>
+            )}
             <Button
-              variant="outline"
               size="sm"
               onClick={() => {
                 items.forEach((item) => {
@@ -138,13 +144,14 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
                 {filteredGroups[group].map((item) => {
                   // Check if this is a non-co-op boss and co-op mode is enabled
                   const isDisabled = type === "bosses" && settings.rules.coopMode && !(item as any).coop
+                  const isLegend = type === "bosses" && item.name.startsWith("⭐")
 
                   return (
                     <div
                       key={item.name}
                       className={`flex items-center justify-between space-x-2 p-2 rounded-md ${
                         isDisabled ? "opacity-50" : "hover:bg-muted"
-                      }`}
+                      } ${isLegend ? "bg-amber-50 dark:bg-amber-950/20" : ""}`}
                     >
                       <Label htmlFor={`${type}-${item.name}`} className="flex cursor-pointer items-center gap-2">
                         <Image
