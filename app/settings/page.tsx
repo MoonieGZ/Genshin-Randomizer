@@ -55,9 +55,6 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
               <TabsContent value="bosses" className="mt-4">
                 <SettingsForm type="bosses" />
               </TabsContent>
-              <TabsContent value="bosses" className="mt-4">
-                <SettingsForm type="bosses" />
-              </TabsContent>
               <TabsContent value="excluded" className="mt-4">
                 <ExcludedCharacters />
               </TabsContent>
