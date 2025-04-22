@@ -17,16 +17,6 @@ export function ActiveRulesDisplay() {
     return (
       <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
         <span>{t("main.noRules")}</span>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <HelpCircle className="h-4 w-4" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{t("main.rulesResetInfo")}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
     )
   }
@@ -35,16 +25,6 @@ export function ActiveRulesDisplay() {
     <div className="flex flex-col items-center gap-2">
       <div className="flex items-center gap-2">
         <span className="text-sm">{t("main.activeRules")}</span>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <HelpCircle className="h-4 w-4" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{t("main.rulesResetInfo")}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
       <div className="flex flex-wrap gap-2 justify-center">
         {settings.rules.coopMode && <Badge variant="outline">Co-op Mode: Enabled</Badge>}
