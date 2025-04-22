@@ -75,7 +75,7 @@
       },
       "coopConfirm": {
         "title": "Disable Non-Co-op Bosses?",
-        "description": "Enabling Co-op mode will disable the following bosses that don't support co-op play:",
+        "description": "Enabling Co-op mode will disable the following bosses:",
         "note": "These bosses will be automatically disabled in your settings.",
         "question": "Do you want to continue?",
         "cancel": "Cancel",
