@@ -10,7 +10,7 @@
       "reset": "Réinitialiser"
     },
     "footer": {
-      "version": "Ver :",
+      "version": "Ver:",
       "copyright": "Moons © 2025"
     },
     "main": {
@@ -22,7 +22,7 @@
       "characters": "Personnages",
       "bosses": "Boss",
       "noRules": "Aucune règle active",
-      "activeRules": "Règles actives :"
+      "activeRules": "Règles actives:"
     },
     "results": {
       "title": "Résultats de la randomisation",
@@ -48,8 +48,8 @@
       "search": "Rechercher",
       "enableAll": "Tout activer",
       "disableAll": "Tout désactiver",
-      "disableLegends": "Désactiver les légendaires",
-      "coopModeWarning": "Mode coop activé : Les boss non-coop sont automatiquement désactivés.",
+      "disableLegends": "Désactiver les légendes",
+      "coopModeWarning": "Mode coop activé: Les boss non-coop sont automatiquement désactivés.",
       "coopDisabled": "Coop N/D",
       "resetConfirm": {
         "title": "Réinitialiser tous les paramètres?",
@@ -61,8 +61,8 @@
         "coopMode": {
           "title": "Mode coop",
           "description": "Contrôle si plusieurs Voyageurs avec des éléments différents peuvent être sélectionnés lors d'un même tirage",
-          "enabled": "Activé : Plusieurs Voyageurs avec des éléments différents peuvent être sélectionnés",
-          "disabled": "Désactivé : Un seul Voyageur peut être sélectionné par tirage"
+          "enabled": "Activé: Plusieurs Voyageurs avec des éléments différents peuvent être sélectionnés",
+          "disabled": "Désactivé: Un seul Voyageur peut être sélectionné par tirage"
         },
         "fiveStarLimit": {
           "title": "Limite de personnages 5 étoiles",
@@ -73,7 +73,7 @@
         },
         "coopConfirm": {
           "title": "Désactiver les boss non-coop?",
-          "description": "L'activation du mode coop désactivera les boss suivants :",
+          "description": "L'activation du mode coop désactivera les boss suivants:",
           "note": "Ces boss seront automatiquement désactivés dans vos paramètres.",
           "question": "Voulez-vous continuer?",
           "cancel": "Annuler",

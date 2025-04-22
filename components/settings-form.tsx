@@ -102,7 +102,7 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor={`${type}-filter`}>
-            {t("settings.filter")} {type}
+            {t(`settings.search.${type}`)}
           </Label>
           <div className="space-x-2">
             {type === "bosses" && (
@@ -137,7 +137,7 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
         </div>
         <Input
           id={`${type}-filter`}
-          placeholder={`${t("settings.search")} ${type}...`}
+          placeholder={`${t(`settings.search.${type}`)}...`}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />

@@ -44,8 +44,16 @@
         "excluded": "Excluded",
         "rules": "Rules"
       },
-      "filter": "Filter",
-      "search": "Search",
+      "filter": {
+        "filter": "Filter",
+        "bosses": "Filter bosses",
+        "characters": "Filter characters"
+      },
+      "search": {
+        "search": "Search",
+        "bosses": "Search bosses",
+        "characters": "Search characters"
+      },
       "enableAll": "Enable All",
       "disableAll": "Disable All",
       "disableLegends": "Disable Legends",
