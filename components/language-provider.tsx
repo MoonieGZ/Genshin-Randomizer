@@ -17,7 +17,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const LANGUAGE_STORAGE_KEY = "genshin-randomizer-language"
 
 // Available languages
-export const AVAILABLE_LANGUAGES = ["en"]
+export const AVAILABLE_LANGUAGES = ["en", "fr"]
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState("en")
