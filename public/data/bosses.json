@@ -1,5 +1,12 @@
 [
   {
+    "name": "Andrius",
+    "icon": "Andrius_Icon.webp",
+    "location": "Mondstadt",
+    "link": "https://genshin-impact.fandom.com/wiki/Andrius",
+    "coop": true
+  },
+  {
     "name": "Anemo Hypostasis",
     "icon": "Anemo_Hypostasis_Icon.webp",
     "location": "Mondstadt",
