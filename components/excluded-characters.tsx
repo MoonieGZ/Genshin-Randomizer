@@ -9,9 +9,11 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Image from "next/image"
 import { RefreshCw } from "lucide-react"
+import { useLanguage } from "./language-provider"
 
 export default function ExcludedCharacters() {
   const { characters, settings, includeCharacter, toggleExclusion } = useGenshinData()
+  const { t } = useLanguage()
 
   // Get excluded characters with their full data
   const excludedCharacters = characters.filter((char) => settings.characters.excluded.includes(char.name))
@@ -21,7 +23,7 @@ export default function ExcludedCharacters() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Switch id="enable-exclusion" checked={settings.enableExclusion} onCheckedChange={toggleExclusion} />
-          <Label htmlFor="enable-exclusion">Enable character exclusion</Label>
+          <Label htmlFor="enable-exclusion">{t("excluded.enableExclusion")}</Label>
         </div>
 
         {excludedCharacters.length > 0 && (
@@ -35,18 +37,18 @@ export default function ExcludedCharacters() {
             }}
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Reset All
+            {t("excluded.resetAll")}
           </Button>
         )}
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-medium">Excluded Characters ({excludedCharacters.length})</h3>
+        <h3 className="text-lg font-medium">
+          {t("excluded.title")} ({excludedCharacters.length})
+        </h3>
 
         {excludedCharacters.length === 0 ? (
-          <p className="text-muted-foreground text-center py-8">
-            No characters have been excluded yet. When you accept characters from the randomizer, they will appear here.
-          </p>
+          <p className="text-muted-foreground text-center py-8">{t("excluded.noCharacters")}</p>
         ) : (
           <ScrollArea className="h-[400px]">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -73,7 +75,7 @@ export default function ExcludedCharacters() {
                         />
                       </div>
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="text-white font-medium">Click to re-enable</span>
+                        <span className="text-white font-medium">{t("excluded.clickToReEnable")}</span>
                       </div>
                     </div>
                     <div className="text-center">

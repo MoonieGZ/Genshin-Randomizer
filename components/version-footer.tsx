@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useLanguage } from "./language-provider"
 
 export function VersionFooter() {
   const [commitId, setCommitId] = useState<string>("loading...")
+  const { t } = useLanguage()
 
   useEffect(() => {
     async function fetchLatestCommit() {
@@ -25,5 +27,17 @@ export function VersionFooter() {
     fetchLatestCommit()
   }, [])
 
-  return <div className="text-center text-sm text-muted-foreground">Ver: <a href={`https://github.com/MoonieGZ/Genshin-Randomizer/commit/${commitId}`} target="_blank" rel="noopener noreferrer">{commitId}</a> - Moons &copy; 2025</div>
+  return (
+    <div className="text-center text-sm text-muted-foreground">
+      {t("footer.version")}{" "}
+      <a
+        href={`https://github.com/MoonieGZ/Genshin-Randomizer/commit/${commitId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {commitId}
+      </a>{" "}
+      - {t("footer.copyright")}
+    </div>
+  )
 }

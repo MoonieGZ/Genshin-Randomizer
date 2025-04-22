@@ -17,11 +17,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useLanguage } from "./language-provider"
 
 export default function RulesSettings() {
   const { settings, toggleCoopMode, toggleLimitFiveStars, updateMaxFiveStars, getNonCoopBosses } = useGenshinData()
   const [showCoopConfirmation, setShowCoopConfirmation] = useState(false)
   const nonCoopBosses = getNonCoopBosses()
+  const { t } = useLanguage()
 
   const handleCoopToggle = (enabled: boolean) => {
     if (enabled && nonCoopBosses.length > 0) {
@@ -44,18 +46,14 @@ export default function RulesSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Co-op Mode</CardTitle>
-          <CardDescription>
-            Controls whether multiple Travelers with different elements can be selected in a single roll
-          </CardDescription>
+          <CardTitle>{t("rules.coopMode.title")}</CardTitle>
+          <CardDescription>{t("rules.coopMode.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-2">
             <Switch id="coop-mode" checked={settings.rules.coopMode} onCheckedChange={handleCoopToggle} />
             <Label htmlFor="coop-mode">
-              {settings.rules.coopMode
-                ? "Enabled: Multiple Travelers with different elements can be selected"
-                : "Disabled: Only one Traveler can be selected per roll"}
+              {settings.rules.coopMode ? t("rules.coopMode.enabled") : t("rules.coopMode.disabled")}
             </Label>
           </div>
         </CardContent>
@@ -63,10 +61,8 @@ export default function RulesSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>5-Star Character Limit</CardTitle>
-          <CardDescription>
-            Controls the maximum number of 5-star characters that can be selected in a single roll
-          </CardDescription>
+          <CardTitle>{t("rules.fiveStarLimit.title")}</CardTitle>
+          <CardDescription>{t("rules.fiveStarLimit.description")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
@@ -76,15 +72,13 @@ export default function RulesSettings() {
               onCheckedChange={toggleLimitFiveStars}
             />
             <Label htmlFor="limit-five-stars">
-              {settings.rules.limitFiveStars
-                ? "Enabled: Limit the number of 5-star characters per roll"
-                : "Disabled: No limit on 5-star characters"}
+              {settings.rules.limitFiveStars ? t("rules.fiveStarLimit.enabled") : t("rules.fiveStarLimit.disabled")}
             </Label>
           </div>
 
           {settings.rules.limitFiveStars && (
             <div className="flex items-center space-x-2 pl-8">
-              <Label htmlFor="max-five-stars">Maximum 5-star characters:</Label>
+              <Label htmlFor="max-five-stars">{t("rules.fiveStarLimit.maximum")}</Label>
               <Input
                 id="max-five-stars"
                 type="number"
@@ -102,21 +96,21 @@ export default function RulesSettings() {
       <AlertDialog open={showCoopConfirmation} onOpenChange={setShowCoopConfirmation}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disable Non-Co-op Bosses?</AlertDialogTitle>
+            <AlertDialogTitle>{t("rules.coopConfirm.title")}</AlertDialogTitle>
             <AlertDialogDescription className="space-y-2">
-              Enabling Co-op mode will disable the following bosses that don't support co-op play:
+              {t("rules.coopConfirm.description")}
               <ul className="list-disc pl-6 max-h-60 overflow-y-auto">
                 {nonCoopBosses.map((boss) => (
                   <li key={boss.name}>{boss.name}</li>
                 ))}
               </ul>
-              These bosses will be automatically disabled in your settings.
-              Do you want to continue?
+              {t("rules.coopConfirm.note")}
+              <p>{t("rules.coopConfirm.question")}</p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmCoopMode}>Continue</AlertDialogAction>
+            <AlertDialogCancel>{t("rules.coopConfirm.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCoopMode}>{t("rules.coopConfirm.confirm")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

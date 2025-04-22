@@ -523,5 +523,75 @@
     "location": "Natlan",
     "link": "https://genshin-impact.fandom.com/wiki/File:The_Peak.png",
     "coop": true
+  },
+  {
+    "name": "Stormterror Dvalin",
+    "icon": "Stormterror_Icon.webp",
+    "location": "Mondstadt",
+    "link": "https://genshin-impact.fandom.com/wiki/Stormterror_Dvalin",
+    "coop": false
+  },
+  {
+    "name": "Azhdaha",
+    "icon": "Azhdaha_Icon.webp",
+    "location": "Liyue",
+    "link": "https://genshin-impact.fandom.com/wiki/Azhdaha_(Weekly_Boss)",
+    "coop": true
+  },
+  {
+    "name": "Magatsu Mitake Narukami no Mikoto",
+    "icon": "Magatsu_Mitake_Narukami_no_Mikoto_Icon.webp",
+    "location": "Inazuma",
+    "link": "https://genshin-impact.fandom.com/wiki/Magatsu_Mitake_Narukami_no_Mikoto",
+    "coop": true
+  },
+  {
+    "name": "Childe",
+    "icon": "Childe_P3_Icon.webp",
+    "location": "Liyue",
+    "link": "https://genshin-impact.fandom.com/wiki/Childe",
+    "coop": true
+  },
+  {
+    "name": "Everlasting Lord of Arcane Wisdom",
+    "icon": "Everlasting_Lord_of_Arcane_Wisdom_Icon.webp",
+    "location": "Sumeru",
+    "link": "https://genshin-impact.fandom.com/wiki/Everlasting_Lord_of_Arcane_Wisdom",
+    "coop": true
+  },
+  {
+    "name": "La Signora",
+    "icon": "La_Signora_Icon.webp",
+    "location": "Inazuma",
+    "link": "https://genshin-impact.fandom.com/wiki/La_Signora",
+    "coop": true
+  },
+  {
+    "name": "The Knave",
+    "icon": "The_Knave_Icon.webp",
+    "location": "Fontaine",
+    "link": "https://genshin-impact.fandom.com/wiki/The_Knave",
+    "coop": true
+  },
+  {
+    "name": "All-Devouring Narwhal",
+    "icon": "All-Devouring_Narwhal_Icon.webp",
+    "location": "Sumeru",
+    "link": "https://genshin-impact.fandom.com/wiki/All-Devouring_Narwhal",
+    "coop": true
+  },
+  {
+    "name": "Lord of Eroded Primal Fire",
+    "icon": "Lord_of_Eroded_Primal_Fire_Icon.webp",
+    "location": "Natlan",
+    "link": "https://genshin-impact.fandom.com/wiki/Lord_of_Eroded_Primal_Fire",
+    "coop": true
+  },
+  {
+    "name": "Guardian of Apep's Oasis",
+    "icon": "Guardian_of_Apeps_Oasis_Icon.webp",
+    "location": "Sumeru",
+    "link": "https://genshin-impact.fandom.com/wiki/Guardian_of_Apep%27s_Oasis",
+    "coop": true
   }
 ]

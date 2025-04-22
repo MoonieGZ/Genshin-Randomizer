@@ -22,22 +22,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useLanguage } from "@/components/language-provider"
+import { LanguageSelector } from "@/components/language-selector"
 
 export default function SettingsPage({ searchParams }: { searchParams: { tab?: string } }) {
   const defaultTab = searchParams.tab || "characters"
   const { resetSettings, isLoading } = useGenshinData()
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
+  const { t, isLoading: isLoadingLanguage } = useLanguage()
 
   const handleReset = () => {
     resetSettings()
     setShowResetConfirmation(false)
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingLanguage) {
     return (
       <div className="flex flex-col min-h-screen items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        <p className="mt-4 text-muted-foreground">Loading settings...</p>
+        <p className="mt-4 text-muted-foreground">{t("app.loading")}</p>
       </div>
     )
   }
@@ -49,20 +52,21 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
           <Link href="/">
             <Button variant="ghost" size="icon" className="mr-2">
               <ArrowLeft className="h-5 w-5" />
-              <span className="sr-only">Back</span>
+              <span className="sr-only">{t("header.back")}</span>
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">Settings</h1>
+          <h1 className="text-2xl font-bold">{t("header.settings")}</h1>
           <div className="ml-auto flex items-center space-x-2">
             <Button variant="outline" size="sm" onClick={() => setShowResetConfirmation(true)} className="mr-2">
               <RotateCcw className="h-4 w-4 mr-1" />
-              Reset
+              {t("header.reset")}
             </Button>
+            <LanguageSelector />
             <ThemeToggle />
             <Link href="https://github.com/MoonieGZ/Genshin-Randomizer" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="icon">
                 <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub Repository</span>
+                <span className="sr-only">{t("header.github")}</span>
               </Button>
             </Link>
           </div>
@@ -72,16 +76,16 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle>Randomizer Settings</CardTitle>
-            <CardDescription>Customize which characters and bosses can be selected in the randomizer</CardDescription>
+            <CardTitle>{t("settings.title")}</CardTitle>
+            <CardDescription>{t("settings.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue={defaultTab}>
               <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="characters">Characters</TabsTrigger>
-                <TabsTrigger value="bosses">Bosses</TabsTrigger>
-                <TabsTrigger value="excluded">Excluded</TabsTrigger>
-                <TabsTrigger value="rules">Rules</TabsTrigger>
+                <TabsTrigger value="characters">{t("settings.tabs.characters")}</TabsTrigger>
+                <TabsTrigger value="bosses">{t("settings.tabs.bosses")}</TabsTrigger>
+                <TabsTrigger value="excluded">{t("settings.tabs.excluded")}</TabsTrigger>
+                <TabsTrigger value="rules">{t("settings.tabs.rules")}</TabsTrigger>
               </TabsList>
               <TabsContent value="characters" className="mt-4">
                 <SettingsForm type="characters" />
@@ -109,14 +113,12 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
       <AlertDialog open={showResetConfirmation} onOpenChange={setShowResetConfirmation}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset All Settings?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will reset all settings to their default values. This action cannot be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("settings.resetConfirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("settings.resetConfirm.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+            <AlertDialogCancel>{t("settings.resetConfirm.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleReset}>{t("settings.resetConfirm.confirm")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

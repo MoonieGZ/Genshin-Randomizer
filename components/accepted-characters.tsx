@@ -7,9 +7,11 @@ import Image from "next/image"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useLanguage } from "./language-provider"
 
 export default function AcceptedCharacters() {
   const { characters, settings } = useGenshinData()
+  const { t } = useLanguage()
 
   // Get excluded characters with their full data
   const excludedCharacters = characters.filter((char) => settings.characters.excluded.includes(char.name))
@@ -22,10 +24,12 @@ export default function AcceptedCharacters() {
     <Card className="w-full max-w-md mt-6">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Picked Characters ({excludedCharacters.length})</CardTitle>
+          <CardTitle className="text-lg">
+            {t("accepted.title")} ({excludedCharacters.length})
+          </CardTitle>
           <Link href="/settings?tab=excluded">
             <Button variant="ghost" size="sm">
-              Manage
+              {t("accepted.manage")}
             </Button>
           </Link>
         </div>

@@ -8,12 +8,20 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState } from "react"
 import Image from "next/image"
-import { Star } from "lucide-react"
+import { useLanguage } from "./language-provider"
 
 export default function SettingsForm({ type }: { type: "characters" | "bosses" }) {
-  const { characters, bosses, settings, updateCharacterEnabled, updateBossEnabled, disableLegendBosses } =
-    useGenshinData()
+  const {
+    characters,
+    bosses,
+    settings,
+    updateCharacterEnabled,
+    updateBossEnabled,
+    disableLegendBosses,
+    bossLocations,
+  } = useGenshinData()
   const [filter, setFilter] = useState("")
+  const { t } = useLanguage()
 
   const items = type === "characters" ? characters : bosses
   const updateEnabled = type === "characters" ? updateCharacterEnabled : updateBossEnabled
@@ -32,12 +40,19 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
     {} as Record<string, any[]>,
   )
 
-  // Sort groups alphabetically
-  const sortedGroups = Object.keys(groupedItems).sort()
+  // Get group keys in the correct order
+  let groupKeys: string[]
+  if (type === "characters") {
+    // Sort elements alphabetically for characters
+    groupKeys = Object.keys(groupedItems).sort()
+  } else {
+    // Use the order from the JSON file for bosses
+    groupKeys = bossLocations.filter((location) => groupedItems[location])
+  }
 
   // Filter items based on search
   const filteredGroups = filter
-    ? sortedGroups.reduce(
+    ? groupKeys.reduce(
         (acc, group) => {
           const filteredItems = groupedItems[group].filter((item) =>
             item.name.toLowerCase().includes(filter.toLowerCase()),
@@ -51,7 +66,15 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
       )
     : groupedItems
 
-  const filteredGroupKeys = Object.keys(filteredGroups).sort()
+  // Get filtered group keys in the correct order
+  let filteredGroupKeys: string[]
+  if (type === "characters") {
+    // Sort elements alphabetically for characters
+    filteredGroupKeys = Object.keys(filteredGroups).sort()
+  } else {
+    // Use the order from the JSON file for bosses
+    filteredGroupKeys = bossLocations.filter((location) => filteredGroups[location])
+  }
 
   // Toggle all items in a group
   const toggleGroup = (group: string, enabled: boolean) => {
@@ -78,11 +101,13 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
     <div className="space-y-6">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor={`${type}-filter`}>Filter {type}</Label>
+          <Label htmlFor={`${type}-filter`}>
+            {t("settings.filter")} {type}
+          </Label>
           <div className="space-x-2">
             {type === "bosses" && (
               <Button variant="outline" size="sm" onClick={disableLegendBosses}>
-                Disable Legends
+                {t("settings.disableLegends")}
               </Button>
             )}
             <Button
@@ -97,7 +122,7 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
                 })
               }}
             >
-              Enable All
+              {t("settings.enableAll")}
             </Button>
             <Button
               variant="outline"
@@ -106,13 +131,13 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
                 items.forEach((item) => updateEnabled(item.name, false))
               }}
             >
-              Disable All
+              {t("settings.disableAll")}
             </Button>
           </div>
         </div>
         <Input
           id={`${type}-filter`}
-          placeholder={`Search ${type}...`}
+          placeholder={`${t("settings.search")} ${type}...`}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
@@ -120,7 +145,7 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
         {type === "bosses" && settings.rules.coopMode && (
           <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-md p-3 mt-2">
             <p className="text-sm text-yellow-800 dark:text-yellow-200">
-              <strong>Co-op Mode is enabled:</strong> Non-co-op bosses are automatically disabled.
+              <strong>{t("settings.coopModeWarning")}</strong>
             </p>
           </div>
         )}
@@ -167,7 +192,9 @@ export default function SettingsForm({ type }: { type: "characters" | "bosses" }
                         />
                         <span className="flex-1">
                           {item.name}
-                          {isDisabled && <span className="text-xs text-muted-foreground ml-1">(Co-op N/A)</span>}
+                          {isDisabled && (
+                            <span className="text-xs text-muted-foreground ml-1">({t("settings.coopDisabled")})</span>
+                          )}
                         </span>
                       </Label>
                       <Switch

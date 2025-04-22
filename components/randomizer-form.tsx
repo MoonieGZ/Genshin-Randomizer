@@ -13,6 +13,7 @@ import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useLanguage } from "./language-provider"
 
 type RandomResult = {
   characters: Array<{
@@ -37,6 +38,7 @@ export default function RandomizerForm() {
   const [open, setOpen] = useState(false)
   const [randomizeType, setRandomizeType] = useState<"characters" | "bosses" | "combined">("characters")
   const { toast } = useToast()
+  const { t } = useLanguage()
 
   // Check if all characters are currently selected
   const areAllCharactersSelected = result?.characters.every((char) => char.selected) || false
@@ -212,8 +214,8 @@ export default function RandomizerForm() {
 
     if (selectedCharacters.length === 0) {
       toast({
-        title: "No characters selected",
-        description: "Please select at least one character to accept.",
+        title: t("results.noCharactersSelected"),
+        description: t("results.selectAtLeastOne"),
         variant: "destructive",
       })
       return
@@ -225,8 +227,8 @@ export default function RandomizerForm() {
     })
 
     toast({
-      title: "Characters accepted",
-      description: `${selectedCharacters.length} character(s) have been excluded from future rolls.`,
+      title: t("results.charactersAccepted"),
+      description: `${selectedCharacters.length} ${t("results.charactersExcluded")}`,
     })
 
     setOpen(false)
@@ -241,7 +243,7 @@ export default function RandomizerForm() {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="character-count">Characters</Label>
+            <Label htmlFor="character-count">{t("main.characters")}</Label>
             <Input
               id="character-count"
               type="number"
@@ -254,13 +256,13 @@ export default function RandomizerForm() {
           </div>
           <Button onClick={() => handleRandomize("characters")} className="w-full">
             <Dice5 className="mr-2 h-4 w-4" />
-            Roll Characters
+            {t("main.roll.characters")}
           </Button>
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="boss-count">Bosses</Label>
+            <Label htmlFor="boss-count">{t("main.bosses")}</Label>
             <Input
               id="boss-count"
               type="number"
@@ -273,20 +275,20 @@ export default function RandomizerForm() {
           </div>
           <Button onClick={() => handleRandomize("bosses")} className="w-full">
             <Dice5 className="mr-2 h-4 w-4" />
-            Roll Bosses
+            {t("main.roll.bosses")}
           </Button>
         </div>
       </div>
 
       <Button onClick={() => handleRandomize("combined")} className="w-full">
         <Dices className="mr-2 h-4 w-4" />
-        Roll Both
+        {t("main.roll.both")}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Randomization Results</DialogTitle>
+            <DialogTitle>{t("results.title")}</DialogTitle>
           </DialogHeader>
 
           {result && (
@@ -294,7 +296,9 @@ export default function RandomizerForm() {
               <div className="space-y-6 p-1">
                 {result.bosses.length > 0 && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Bosses ({result.bosses.length})</h3>
+                    <h3 className="text-lg font-medium">
+                      {t("main.bosses")} ({result.bosses.length})
+                    </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                       {result.bosses.map((boss) => (
                         <Card
@@ -333,7 +337,9 @@ export default function RandomizerForm() {
 
                 {result.characters.length > 0 && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Characters ({result.characters.length})</h3>
+                    <h3 className="text-lg font-medium">
+                      {t("main.characters")} ({result.characters.length})
+                    </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                       {result.characters.map((character, index) => (
                         <Card
@@ -388,7 +394,7 @@ export default function RandomizerForm() {
                     result.characters.length > 0 &&
                     settings.enableExclusion && (
                       <Button variant="outline" onClick={toggleAllCharacters}>
-                        {areAllCharactersSelected ? "Unselect All" : "Select All"}
+                        {areAllCharactersSelected ? t("results.unselectAll") : t("results.selectAll")}
                       </Button>
                     )}
                   <Button
@@ -399,8 +405,8 @@ export default function RandomizerForm() {
                     }
                   >
                     {randomizeType === "bosses" || !settings.enableExclusion || result.characters.length === 0
-                      ? "Close"
-                      : "Accept"}
+                      ? t("results.close")
+                      : t("results.accept")}
                   </Button>
                 </div>
               </div>

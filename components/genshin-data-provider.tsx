@@ -78,6 +78,7 @@ type GenshinDataContextType = {
   disableLegendBosses: () => void
   resetSettings: () => void
   isLoading: boolean
+  bossLocations: string[] // Add this to track location order
 }
 
 const GenshinDataContext = createContext<GenshinDataContextType | undefined>(undefined)
@@ -91,6 +92,7 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
   const [bosses, setBosses] = useState<Boss[]>([])
   const [settings, setSettings] = useState<Settings>({ ...DEFAULT_SETTINGS })
   const [isLoading, setIsLoading] = useState(true)
+  const [bossLocations, setBossLocations] = useState<string[]>([]) // Add this to track location order
 
   // Save settings to Local Storage
   const saveSettings = (newSettings: Settings) => {
@@ -153,7 +155,7 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
       },
     }
 
-    // If co-op mode is enabled, disable non-co-op bosses
+    // If co-op mode is enabled, disable all non-co-op bosses
     if (newSettings.rules.coopMode) {
       bosses.forEach((boss) => {
         if (!boss.coop) {
@@ -184,6 +186,15 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         const bossesResponse = await fetch("/data/bosses.json")
         const bossesData: Boss[] = await bossesResponse.json()
         setBosses(bossesData)
+
+        // Extract unique locations in the order they appear in the JSON
+        const locations: string[] = []
+        bossesData.forEach((boss) => {
+          if (!locations.includes(boss.location)) {
+            locations.push(boss.location)
+          }
+        })
+        setBossLocations(locations)
 
         // Initialize settings
         initializeData(charactersData, bossesData, savedSettings)
@@ -388,6 +399,7 @@ export function GenshinDataProvider({ children }: { children: React.ReactNode })
         disableLegendBosses,
         resetSettings,
         isLoading,
+        bossLocations, // Add this to the context
       }}
     >
       {children}
