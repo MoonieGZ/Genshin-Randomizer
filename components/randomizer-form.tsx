@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useGenshinData } from "./genshin-data-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useLanguage } from "./language-provider"
+import { cn } from "@/lib/utils"
 
 type RandomResult = {
   characters: Array<{
@@ -22,6 +23,7 @@ type RandomResult = {
     element: string
     icon: string
     selected?: boolean
+    visible?: boolean
   }>
   bosses: Array<{
     name: string
@@ -29,6 +31,7 @@ type RandomResult = {
     location: string
     link: string
     coop: boolean
+    visible?: boolean
   }>
 }
 
@@ -39,9 +42,53 @@ export default function RandomizerForm() {
   const [randomizeType, setRandomizeType] = useState<"characters" | "bosses" | "combined">("characters")
   const { toast } = useToast()
   const { t } = useLanguage()
+  const [isAnimating, setIsAnimating] = useState(false)
 
   // Check if all characters are currently selected
   const areAllCharactersSelected = result?.characters.every((char) => char.selected) || false
+
+  // Function to animate items appearing one by one
+  const animateResults = (newResult: RandomResult) => {
+    setIsAnimating(true)
+
+    // Initialize all items as not visible
+    const initialResult = {
+      characters: newResult.characters.map((char) => ({ ...char, visible: false })),
+      bosses: newResult.bosses.map((boss) => ({ ...boss, visible: false })),
+    }
+
+    setResult(initialResult)
+
+    // Animate bosses first, then characters
+    const allItems = [
+      ...initialResult.bosses.map((item, index) => ({ type: "boss", index })),
+      ...initialResult.characters.map((item, index) => ({ type: "character", index })),
+    ]
+
+    // Reveal items one by one with a delay
+    allItems.forEach((item, i) => {
+      setTimeout(() => {
+        setResult((prev) => {
+          if (!prev) return prev
+
+          if (item.type === "boss") {
+            const updatedBosses = [...prev.bosses]
+            updatedBosses[item.index] = { ...updatedBosses[item.index], visible: true }
+            return { ...prev, bosses: updatedBosses }
+          } else {
+            const updatedCharacters = [...prev.characters]
+            updatedCharacters[item.index] = { ...updatedCharacters[item.index], visible: true }
+            return { ...prev, characters: updatedCharacters }
+          }
+        })
+
+        // Set animating to false when all items are revealed
+        if (i === allItems.length - 1) {
+          setTimeout(() => setIsAnimating(false), 300)
+        }
+      }, i * 100) // 100ms delay between each item
+    })
+  }
 
   const getRandomizedCharacters = () => {
     // Filter enabled characters
@@ -117,10 +164,10 @@ export default function RandomizerForm() {
       // Combine and shuffle again
       selectedCharacters = [...selectedFiveStars, ...selectedFourStars]
         .sort(() => Math.random() - 0.5)
-        .map((char) => ({ ...char, selected: false }))
+        .map((char) => ({ ...char, selected: false, visible: false }))
     } else {
       // No 5-star limit, just take the filtered characters
-      selectedCharacters = filteredCharacters.map((char) => ({ ...char, selected: false }))
+      selectedCharacters = filteredCharacters.map((char) => ({ ...char, selected: false, visible: false }))
     }
 
     // Check if we have enough characters after applying all rules
@@ -153,7 +200,10 @@ export default function RandomizerForm() {
     }
 
     // Shuffle and select bosses
-    const selectedBosses = [...enabledBosses].sort(() => Math.random() - 0.5).slice(0, settings.bosses.count)
+    const selectedBosses = [...enabledBosses]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, settings.bosses.count)
+      .map((boss) => ({ ...boss, visible: false }))
 
     return selectedBosses
   }
@@ -176,16 +226,17 @@ export default function RandomizerForm() {
       selectedBosses = bosses
     }
 
-    setResult({
+    const newResult = {
       characters: selectedCharacters,
       bosses: selectedBosses,
-    })
+    }
 
     setOpen(true)
+    animateResults(newResult)
   }
 
   const toggleCharacterSelection = (index: number) => {
-    if (!result) return
+    if (!result || isAnimating) return
 
     setResult({
       ...result,
@@ -194,7 +245,7 @@ export default function RandomizerForm() {
   }
 
   const toggleAllCharacters = () => {
-    if (!result) return
+    if (!result || isAnimating) return
 
     // If all characters are currently selected, deselect all
     // Otherwise, select all
@@ -207,7 +258,7 @@ export default function RandomizerForm() {
   }
 
   const handleAcceptSelected = () => {
-    if (!result) return
+    if (!result || isAnimating) return
 
     // Get selected characters
     const selectedCharacters = result.characters.filter((char) => char.selected)
@@ -235,8 +286,16 @@ export default function RandomizerForm() {
   }
 
   const handleBossClick = (link: string) => {
+    if (isAnimating) return
     window.open(link, "_blank", "noopener,noreferrer")
   }
+
+  // Reset animation state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsAnimating(false)
+    }
+  }, [open])
 
   return (
     <div className="space-y-3">
@@ -254,7 +313,7 @@ export default function RandomizerForm() {
               className="w-20 ml-2"
             />
           </div>
-          <Button onClick={() => handleRandomize("characters")} className="w-full">
+          <Button onClick={() => handleRandomize("characters")} className="w-full" disabled={isAnimating}>
             <Dice5 className="mr-2 h-4 w-4" />
             {t("main.roll.characters")}
           </Button>
@@ -273,14 +332,14 @@ export default function RandomizerForm() {
               className="w-20 ml-2"
             />
           </div>
-          <Button onClick={() => handleRandomize("bosses")} className="w-full">
+          <Button onClick={() => handleRandomize("bosses")} className="w-full" disabled={isAnimating}>
             <Dice5 className="mr-2 h-4 w-4" />
             {t("main.roll.bosses")}
           </Button>
         </div>
       </div>
 
-      <Button onClick={() => handleRandomize("combined")} className="w-full">
+      <Button onClick={() => handleRandomize("combined")} className="w-full" disabled={isAnimating}>
         <Dices className="mr-2 h-4 w-4" />
         {t("main.roll.both")}
       </Button>
@@ -301,35 +360,42 @@ export default function RandomizerForm() {
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                       {result.bosses.map((boss) => (
-                        <Card
+                        <div
                           key={boss.name}
-                          className="overflow-hidden cursor-pointer hover:ring-2 hover:ring-primary transition-all"
-                          onClick={() => handleBossClick(boss.link)}
+                          className={cn("transition-opacity duration-300", boss.visible ? "opacity-100" : "opacity-0")}
                         >
-                          <CardContent className="p-3 space-y-2">
-                            <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
-                              <div className="absolute top-0 right-0 z-10">
-                                <Badge variant="outline" className="m-1">
-                                  {boss.location}
-                                </Badge>
+                          <Card
+                            className={cn(
+                              "overflow-hidden cursor-pointer hover:ring-2 hover:ring-primary transition-all",
+                              boss.visible && "animate-appear",
+                            )}
+                            onClick={() => handleBossClick(boss.link)}
+                          >
+                            <CardContent className="p-3 space-y-2">
+                              <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
+                                <div className="absolute top-0 right-0 z-10">
+                                  <Badge variant="outline" className="m-1">
+                                    {boss.location}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center justify-center h-full">
+                                  <Image
+                                    src={`/bosses/${boss.location}/${boss.icon}?height=80&width=80&text=${encodeURIComponent(boss.name)}`}
+                                    alt={boss.name}
+                                    width={80}
+                                    height={80}
+                                    className="object-cover"
+                                  />
+                                </div>
                               </div>
-                              <div className="flex items-center justify-center h-full">
-                                <Image
-                                  src={`/bosses/${boss.location}/${boss.icon}?height=80&width=80&text=${encodeURIComponent(boss.name)}`}
-                                  alt={boss.name}
-                                  width={80}
-                                  height={80}
-                                  className="object-cover"
-                                />
+                              <div className="text-center">
+                                <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
+                                  {boss.name}
+                                </p>
                               </div>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
-                                {boss.name}
-                              </p>
-                            </div>
-                          </CardContent>
-                        </Card>
+                            </CardContent>
+                          </Card>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -342,48 +408,59 @@ export default function RandomizerForm() {
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                       {result.characters.map((character, index) => (
-                        <Card
+                        <div
                           key={character.name}
-                          className={`overflow-hidden cursor-pointer ${character.selected ? "ring-2 ring-primary" : ""}`}
-                          onClick={() => settings.enableExclusion && toggleCharacterSelection(index)}
+                          className={cn(
+                            "transition-opacity duration-300",
+                            character.visible ? "opacity-100" : "opacity-0",
+                          )}
                         >
-                          <CardContent className="p-3 space-y-2">
-                            <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
-                              <div className="absolute top-0 right-0 z-10">
-                                <Badge variant="secondary" className="m-1">
-                                  {character.element}
-                                </Badge>
-                              </div>
-                              {settings.enableExclusion && (
-                                <div className="absolute top-0 left-0 z-10 m-1">
-                                  <Checkbox
-                                    checked={character.selected}
-                                    onCheckedChange={() => toggleCharacterSelection(index)}
-                                    id={`select-${character.name}`}
-                                    onClick={(e) => e.stopPropagation()}
+                          <Card
+                            className={cn(
+                              "overflow-hidden cursor-pointer transition-all",
+                              character.selected ? "ring-2 ring-primary" : "",
+                              character.visible && "animate-appear",
+                            )}
+                            onClick={() => settings.enableExclusion && toggleCharacterSelection(index)}
+                          >
+                            <CardContent className="p-3 space-y-2">
+                              <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
+                                <div className="absolute top-0 right-0 z-10">
+                                  <Badge variant="secondary" className="m-1">
+                                    {character.element}
+                                  </Badge>
+                                </div>
+                                {settings.enableExclusion && (
+                                  <div className="absolute top-0 left-0 z-10 m-1">
+                                    <Checkbox
+                                      checked={character.selected}
+                                      onCheckedChange={() => toggleCharacterSelection(index)}
+                                      id={`select-${character.name}`}
+                                      onClick={(e) => e.stopPropagation()}
+                                    />
+                                  </div>
+                                )}
+                                <div className="flex items-center justify-center h-full">
+                                  <Image
+                                    src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
+                                    alt={character.name}
+                                    width={80}
+                                    height={80}
+                                    className="object-cover"
                                   />
                                 </div>
-                              )}
-                              <div className="flex items-center justify-center h-full">
-                                <Image
-                                  src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
-                                  alt={character.name}
-                                  width={80}
-                                  height={80}
-                                  className="object-cover"
-                                />
                               </div>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
-                                {character.name}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {character.rarity === 5 ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
-                              </p>
-                            </div>
-                          </CardContent>
-                        </Card>
+                              <div className="text-center">
+                                <p className="text-sm font-medium text-wrap min-h-[40px] flex items-center justify-center">
+                                  {character.name}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {character.rarity === 5 ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
+                                </p>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -393,7 +470,7 @@ export default function RandomizerForm() {
                   {(randomizeType === "characters" || randomizeType === "combined") &&
                     result.characters.length > 0 &&
                     settings.enableExclusion && (
-                      <Button variant="outline" onClick={toggleAllCharacters}>
+                      <Button variant="outline" onClick={toggleAllCharacters} disabled={isAnimating}>
                         {areAllCharactersSelected ? t("results.unselectAll") : t("results.selectAll")}
                       </Button>
                     )}
@@ -403,6 +480,7 @@ export default function RandomizerForm() {
                         ? () => setOpen(false)
                         : handleAcceptSelected
                     }
+                    disabled={isAnimating}
                   >
                     {randomizeType === "bosses" || !settings.enableExclusion || result.characters.length === 0
                       ? t("results.close")
