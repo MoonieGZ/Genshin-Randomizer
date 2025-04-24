@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import Image from "next/image"
 import { RefreshCw } from "lucide-react"
 import { useLanguage } from "./language-provider"
+import { cn } from "@/lib/utils"
 
 export default function ExcludedCharacters() {
   const { characters, settings, includeCharacter, toggleExclusion } = useGenshinData()
@@ -55,34 +56,51 @@ export default function ExcludedCharacters() {
               {excludedCharacters.map((character) => (
                 <Card
                   key={character.name}
-                  className="overflow-hidden relative group cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                  className={cn(
+                    "overflow-hidden relative group cursor-pointer hover:ring-2 hover:ring-primary transition-all character-card",
+                    character.rarity === 5 ? "border-accent-5" : "border-accent-4",
+                  )}
                   onClick={() => includeCharacter(character.name)}
                 >
-                  <CardContent className="p-3 space-y-2">
-                    <div className="aspect-square relative bg-muted rounded-md overflow-hidden">
-                      <div className="absolute top-0 right-0 z-10">
-                        <Badge variant="secondary" className="m-1">
-                          {character.element}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-center h-full">
+                  <CardContent className="p-0 relative">
+                    <div className="aspect-square relative overflow-hidden">
+                      <div
+                        className={cn(
+                          "absolute inset-0 z-0",
+                          character.rarity === 5 ? "rarity-5-gradient" : "rarity-4-gradient",
+                        )}
+                      ></div>
+
+                      {/* Character image */}
+                      <div className="character-image-container">
                         <Image
-                          src={`/characters/${character.element}/${character.icon}?height=80&width=80&text=${encodeURIComponent(character.name)}`}
+                          src={`/characters/${character.element}/${character.icon}?height=200&width=200&text=${encodeURIComponent(character.name)}`}
                           alt={character.name}
-                          width={80}
-                          height={80}
+                          width={200}
+                          height={200}
                           className="object-cover"
                         />
                       </div>
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="text-white font-medium">{t("excluded.clickToReEnable")}</span>
+
+                      {/* Element badge with distinct border */}
+                      <div className="absolute top-2 right-2 z-20">
+                        <Badge variant="secondary" className="element-badge">
+                          {character.element}
+                        </Badge>
                       </div>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-medium truncate">{character.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {character.rarity === 5 ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
-                      </p>
+
+                      {/* Character info overlay */}
+                      <div className="character-info-overlay">
+                        <p className="text-sm font-medium truncate text-shadow">{character.name}</p>
+                        <p className="text-xs text-white/80 text-shadow">
+                          {character.rarity === 5 ? "⭐⭐⭐⭐⭐" : "⭐⭐⭐⭐"}
+                        </p>
+                      </div>
+
+                      {/* Re-enable overlay */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-30">
+                        <span className="text-white font-medium text-shadow">{t("excluded.clickToReEnable")}</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

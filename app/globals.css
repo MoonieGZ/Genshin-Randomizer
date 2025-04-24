@@ -123,3 +123,178 @@ body {
 .animate-appear {
   animation: fadeIn 0.3s ease-out, shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
+
+/* Character rarity gradients - reduced intensity */
+.rarity-4-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(167, 139, 250, 0.25) 0%,
+    rgba(139, 92, 246, 0.25) 50%,
+    rgba(124, 58, 237, 0.25) 100%
+  );
+}
+
+.rarity-5-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.25) 0%,
+    rgba(217, 119, 6, 0.25) 50%,
+    rgba(180, 83, 9, 0.25) 100%
+  );
+}
+
+/* Subtle border accents for character cards */
+.border-accent-4 {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.border-accent-5 {
+  border-color: rgba(217, 119, 6, 0.3);
+}
+
+/* Full-size character image container */
+.character-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.375rem;
+}
+
+.character-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.3s ease;
+}
+
+/* Card hover effect */
+.character-card:hover .character-image-container img,
+.boss-card:hover .boss-image-container img {
+  transform: scale(1.05);
+}
+
+/* Element/Location badge with distinct border */
+.element-badge {
+  border: 2px solid var(--background);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Character info overlay */
+.character-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
+  padding: 1rem 0.5rem 0.5rem;
+  color: white;
+  z-index: 10;
+}
+
+/* Text shadow for better readability */
+.text-shadow {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Boss image container */
+.boss-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.375rem;
+}
+
+.boss-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+}
+
+/* Boss info overlay */
+.boss-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
+  padding: 1rem 0.5rem 0.5rem;
+  color: white;
+  z-index: 10;
+}
+
+/* Overlay for better text readability */
+.card-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  border-radius: 0.375rem;
+}
+
+/* Gradient border effect - fix border visibility */
+.gradient-border-4 {
+  position: relative;
+  z-index: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.gradient-border-4::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: -1px; /* Use inset instead of individual properties */
+  background-color: transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(167, 139, 250, 0.5) 0%,
+    rgba(139, 92, 246, 0.5) 50%,
+    rgba(124, 58, 237, 0.5) 100%
+  );
+  border-radius: inherit;
+  animation: rotate 4s linear infinite;
+}
+
+.gradient-border-5 {
+  position: relative;
+  z-index: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.gradient-border-5::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: -1px; /* Use inset instead of individual properties */
+  background-color: transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.5) 0%,
+    rgba(217, 119, 6, 0.5) 50%,
+    rgba(180, 83, 9, 0.5) 100%
+  );
+  border-radius: inherit;
+  animation: rotate 4s linear infinite;
+}
+
+.gradient-border-4::after,
+.gradient-border-5::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 1px; /* Use inset instead of individual properties */
+  background: var(--background);
+  border-radius: calc(0.5rem - 1px);
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
