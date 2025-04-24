@@ -5,6 +5,7 @@ import { useLanguage } from "./language-provider"
 
 export function VersionFooter() {
   const [commitId, setCommitId] = useState<string>("loading...")
+  const [commitDate, setCommitDate] = useState<string>("")
   const { t } = useLanguage()
 
   useEffect(() => {
@@ -15,12 +16,18 @@ export function VersionFooter() {
           const data = await response.json()
           // Get the first 7 characters of the commit SHA (short version)
           setCommitId(data.sha.substring(0, 7))
+          // Format the date to yyyy-MM-dd
+          const date = new Date(data.commit.author.date)
+          const formattedDate = date.toISOString().split('T')[0]
+          setCommitDate(formattedDate)
         } else {
           setCommitId("unknown")
+          setCommitDate("")
         }
       } catch (error) {
         console.error("Error fetching commit ID:", error)
         setCommitId("unknown")
+        setCommitDate("")
       }
     }
 
@@ -36,8 +43,8 @@ export function VersionFooter() {
         rel="noopener noreferrer"
       >
         {commitId}
-      </a>{" "}
-      - {t("footer.copyright")}
+      </a>
+      {commitDate && ` (${commitDate})`} - {t("footer.copyright")}
     </div>
   )
 }
