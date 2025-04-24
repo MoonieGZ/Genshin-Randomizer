@@ -327,7 +327,7 @@ export default function RandomizerForm() {
                     <h3 className="text-lg font-medium">
                       {t("main.bosses")} ({result.bosses.length})
                     </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <div className="results-grid">
                       {result.bosses.map((boss) => (
                         <div
                           key={boss.name}
@@ -381,7 +381,7 @@ export default function RandomizerForm() {
                     <h3 className="text-lg font-medium">
                       {t("main.characters")} ({result.characters.length})
                     </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <div className="results-grid">
                       {result.characters.map((character, index) => (
                         <div
                           key={character.name}

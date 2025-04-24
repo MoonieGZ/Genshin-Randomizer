@@ -52,7 +52,7 @@ export default function ExcludedCharacters() {
           <p className="text-muted-foreground text-center py-8">{t("excluded.noCharacters")}</p>
         ) : (
           <ScrollArea className="h-[400px]">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="results-grid">
               {excludedCharacters.map((character) => (
                 <Card
                   key={character.name}

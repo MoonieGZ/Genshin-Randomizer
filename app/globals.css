@@ -298,3 +298,65 @@ body {
     transform: rotate(1turn);
   }
 }
+
+/* Fix for card rendering artifacts */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Ensure cards have clean rendering without artifacts */
+.character-card,
+.boss-card {
+  width: 100%;
+  transform: translateZ(0); /* Force GPU acceleration */
+  backface-visibility: hidden; /* Prevent rendering artifacts */
+  will-change: transform; /* Hint to browser about animation */
+  overflow: hidden;
+}
+
+/* Ensure image containers don't cause overflow */
+.character-image-container,
+.boss-image-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.375rem;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+/* Add these additional fixes to prevent rendering artifacts */
+
+/* Ensure clean card borders */
+.card {
+  isolation: isolate; /* Create a new stacking context */
+}
+
+/* Fix for border rendering */
+.character-card::after,
+.boss-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+/* Ensure gradient backgrounds don't cause artifacts */
+.rarity-4-gradient,
+.rarity-5-gradient {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Ensure proper rendering on high-DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .character-card,
+  .boss-card {
+    transform: translateZ(0);
+  }
+}
