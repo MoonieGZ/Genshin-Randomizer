@@ -86,7 +86,7 @@
     },
     "notEnoughCharacters": {
       "title": "Not enough characters available",
-      "description": "Could only select {count} characters after applying all rules. Consider adjusting your settings."
+      "description": "Could not select enough characters after applying all rules. Consider adjusting your settings."
     },
     "coopConfirm": {
       "title": "Disable Non-Co-op Bosses?",

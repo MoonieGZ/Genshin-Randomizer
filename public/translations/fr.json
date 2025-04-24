@@ -86,7 +86,7 @@
     },
     "notEnoughCharacters": {
       "title": "Pas assez de personnages",
-      "description": "N'a pu sélectionner que {count} personnages après avoir appliqué toutes les règles. Veuillez ajuster vos paramètres."
+      "description": "N'a pu sélectionner assez de personnages après avoir appliqué toutes les règles. Veuillez ajuster vos paramètres."
     },
     "coopConfirm": {
       "title": "Désactiver les boss non-coop?",

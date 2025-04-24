@@ -91,95 +91,64 @@ export default function RandomizerForm() {
   }
 
   const getRandomizedCharacters = () => {
-    // Filter enabled characters
+    // Step 1: Get eligible characters
     const enabledCharacters = characters.filter(
       (char) =>
         settings.characters.enabled[char.name] &&
-        (!settings.enableExclusion || !settings.characters.excluded.includes(char.name)),
+        (!settings.enableExclusion || !settings.characters.excluded.includes(char.name))
     )
-
-    // Check if we have enough enabled characters
+  
+    // Edge case: not enough characters in total
     if (enabledCharacters.length < settings.characters.count) {
       toast({
         title: t("rules.notEnoughCharacters.title"),
-        description: t("rules.notEnoughCharacters.description").replace("{count}", settings.characters.count.toString()),
+        description: t("rules.notEnoughCharacters.description"),
         variant: "destructive",
       })
       return null
     }
-
-    // Shuffle characters
-    const shuffledCharacters = [...enabledCharacters].sort(() => Math.random() - 0.5)
-
-    // Apply rules for character selection
-    let filteredCharacters = [...shuffledCharacters]
-
-    // Apply co-op mode rule if needed
-    if (!settings.rules.coopMode) {
-      const travelerCharacters = shuffledCharacters.filter((char) => char.name.startsWith("Traveler ("))
-      const nonTravelerCharacters = shuffledCharacters.filter((char) => !char.name.startsWith("Traveler ("))
-
-      filteredCharacters = nonTravelerCharacters
-
-      if (travelerCharacters.length > 0) {
-        // Pick a random Traveler from the remaining eligible ones
-        const selectedTraveler = travelerCharacters[Math.floor(Math.random() * travelerCharacters.length)]
-        filteredCharacters.push(selectedTraveler)
-      }
-
-      // Shuffle final result so no fixed positions
-      filteredCharacters = filteredCharacters.sort(() => Math.random() - 0.5)
-
-      // Update the filtered list
-      filteredCharacters = filteredCharacters.slice(0, settings.characters.count)
-    } else {
-      filteredCharacters = shuffledCharacters.slice(0, settings.characters.count)
+  
+    // Step 2: Split by rules
+    let travelers = enabledCharacters.filter((c) => c.name.startsWith("Traveler ("))
+    let nonTravelers = enabledCharacters.filter((c) => !c.name.startsWith("Traveler ("))
+  
+    let candidatePool = [...nonTravelers]
+  
+    // Step 3: If coopMode is disabled, optionally add 1 random Traveler
+    if (!settings.rules.coopMode && travelers.length > 0) {
+      const randomTraveler = travelers[Math.floor(Math.random() * travelers.length)]
+      candidatePool.push(randomTraveler)
     }
-
-    // Apply 5-star character limit rule if enabled
-    let selectedCharacters: any[] = []
+  
+    // Step 4: Apply 5-star rule (if active)
+    let finalCharacters: typeof characters = []
+  
     if (settings.rules.limitFiveStars) {
-      const fiveStarCharacters: any[] = []
-      const fourStarCharacters: any[] = []
-
-      // Separate 5-star and 4-star characters from the filtered list
-      filteredCharacters.forEach((char) => {
-        if (char.rarity === 5) {
-          fiveStarCharacters.push(char)
-        } else {
-          fourStarCharacters.push(char)
-        }
-      })
-
-      // Take limited number of 5-star characters
-      const selectedFiveStars = fiveStarCharacters.slice(
-        0,
-        Math.min(settings.rules.maxFiveStars, settings.characters.count),
-      )
-
-      // Fill the rest with 4-star characters
-      const remainingSlots = settings.characters.count - selectedFiveStars.length
-      const selectedFourStars = fourStarCharacters.slice(0, remainingSlots)
-
-      // Combine and shuffle again
-      selectedCharacters = [...selectedFiveStars, ...selectedFourStars]
-        .sort(() => Math.random() - 0.5)
-        .map((char) => ({ ...char, selected: false, visible: false }))
+      const max5 = settings.rules.maxFiveStars
+      const count = settings.characters.count
+  
+      const fiveStars = candidatePool.filter((c) => c.rarity === 5)
+      const fourStars = candidatePool.filter((c) => c.rarity < 5)
+  
+      if (fiveStars.length < max5 || fourStars.length < (count - max5)) {
+        toast({
+          title: t("rules.notEnoughCharacters.title"),
+          description: t("rules.notEnoughCharacters.description"),
+          variant: "destructive",
+        })
+        return null
+      }
+  
+      const selected5 = [...fiveStars].sort(() => Math.random() - 0.5).slice(0, max5)
+      const selected4 = [...fourStars].sort(() => Math.random() - 0.5).slice(0, count - selected5.length)
+  
+      finalCharacters = [...selected5, ...selected4].sort(() => Math.random() - 0.5)
     } else {
-      // No 5-star limit, just take the filtered characters
-      selectedCharacters = filteredCharacters.map((char) => ({ ...char, selected: false, visible: false }))
+      // No 5-star limit, just take a random sample of the pool
+      finalCharacters = [...candidatePool].sort(() => Math.random() - 0.5).slice(0, settings.characters.count)
     }
-
-    // Check if we have enough characters after applying all rules
-    if (selectedCharacters.length < settings.characters.count) {
-      toast({
-        title: t("rules.notEnoughCharacters.title"),
-        description: t("rules.notEnoughCharacters.description").replace("{count}", settings.rules.maxFiveStars.toString()),
-        variant: "destructive",
-      })
-    }
-
-    return selectedCharacters
+  
+    return finalCharacters.map((char) => ({ ...char, selected: false, visible: false }))
   }
 
   const getRandomizedBosses = () => {
