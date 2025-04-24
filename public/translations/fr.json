@@ -80,6 +80,14 @@
       "disabled": "Désactivé: Pas de limite pour les personnages 5 étoiles",
       "maximum": "Nombre maximum de personnages 5 étoiles:"
     },
+    "notEnoughBosses": {
+      "title": "Pas assez de boss disponibles",
+      "description": "Veuillez activer au moins {count} boss dans les paramètres."
+    },
+    "notEnoughCharacters": {
+      "title": "Pas assez de personnages",
+      "description": "N'a pu sélectionner que {count} personnages après avoir appliqué toutes les règles. Veuillez ajuster vos paramètres."
+    },
     "coopConfirm": {
       "title": "Désactiver les boss non-coop?",
       "description": "L'activation du mode coop désactivera les boss suivants:",

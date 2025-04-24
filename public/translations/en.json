@@ -80,6 +80,14 @@
       "disabled": "Disabled: No limit on 5-star characters",
       "maximum": "Maximum 5-star characters:"
     },
+    "notEnoughBosses": {
+      "title": "Not enough bosses available",
+      "description": "Please enable at least {count} bosses in settings."
+    },
+    "notEnoughCharacters": {
+      "title": "Not enough characters available",
+      "description": "Could only select {count} characters after applying all rules. Consider adjusting your settings."
+    },
     "coopConfirm": {
       "title": "Disable Non-Co-op Bosses?",
       "description": "Enabling Co-op mode will disable the following bosses:",

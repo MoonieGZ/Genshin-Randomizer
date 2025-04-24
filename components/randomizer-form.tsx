@@ -173,8 +173,8 @@ export default function RandomizerForm() {
     // Check if we have enough characters after applying all rules
     if (selectedCharacters.length < settings.characters.count) {
       toast({
-        title: "Not enough characters available",
-        description: `Could only select ${selectedCharacters.length} characters after applying all rules. Consider adjusting your settings.`,
+        title: t("rules.notEnoughCharacters.title"),
+        description: t("rules.notEnoughCharacters.description").replace("{count}", settings.rules.maxFiveStars.toString()),
         variant: "destructive",
       })
     }
@@ -192,8 +192,8 @@ export default function RandomizerForm() {
     // Check if we have enough enabled bosses
     if (enabledBosses.length < settings.bosses.count) {
       toast({
-        title: "Not enough bosses enabled",
-        description: `Please enable at least ${settings.bosses.count} bosses in settings.`,
+        title: t("rules.notEnoughBosses.title"),
+        description: t("rules.notEnoughBosses.description").replace("{count}", settings.rules.maxFiveStars.toString()),
         variant: "destructive",
       })
       return null
