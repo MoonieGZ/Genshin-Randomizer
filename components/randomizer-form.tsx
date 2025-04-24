@@ -101,8 +101,8 @@ export default function RandomizerForm() {
     // Check if we have enough enabled characters
     if (enabledCharacters.length < settings.characters.count) {
       toast({
-        title: "Not enough characters enabled",
-        description: `Please enable at least ${settings.characters.count} characters in settings.`,
+        title: t("rules.notEnoughCharacters.title"),
+        description: t("rules.notEnoughCharacters.description").replace("{count}", settings.characters.count.toString()),
         variant: "destructive",
       })
       return null
