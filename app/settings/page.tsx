@@ -57,7 +57,12 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
           </Link>
           <h1 className="text-2xl font-bold">{t("header.settings")}</h1>
           <div className="ml-auto flex items-center space-x-2">
-            <Button variant="outline" size="sm" onClick={() => setShowResetConfirmation(true)} className="mr-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowResetConfirmation(true)}
+              className="mr-2 button-enhanced"
+            >
               <RotateCcw className="h-4 w-4 mr-1" />
               {t("header.reset")}
             </Button>
@@ -73,7 +78,7 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8 main-container">
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
             <CardTitle>{t("settings.title")}</CardTitle>
@@ -111,14 +116,16 @@ export default function SettingsPage({ searchParams }: { searchParams: { tab?: s
       </footer>
 
       <AlertDialog open={showResetConfirmation} onOpenChange={setShowResetConfirmation}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dialog-content">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("settings.resetConfirm.title")}</AlertDialogTitle>
             <AlertDialogDescription>{t("settings.resetConfirm.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("settings.resetConfirm.cancel")}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleReset}>{t("settings.resetConfirm.confirm")}</AlertDialogAction>
+            <AlertDialogAction onClick={handleReset} className="button-enhanced">
+              {t("settings.resetConfirm.confirm")}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

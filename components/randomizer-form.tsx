@@ -295,7 +295,11 @@ export default function RandomizerForm() {
               className="w-20 ml-2"
             />
           </div>
-          <Button onClick={() => handleRandomize("characters")} className="w-full" disabled={isAnimating}>
+          <Button
+            onClick={() => handleRandomize("characters")}
+            className="w-full button-enhanced"
+            disabled={isAnimating}
+          >
             <Dice5 className="mr-2 h-4 w-4" />
             {t("main.roll.characters")}
           </Button>
@@ -314,20 +318,20 @@ export default function RandomizerForm() {
               className="w-20 ml-2"
             />
           </div>
-          <Button onClick={() => handleRandomize("bosses")} className="w-full" disabled={isAnimating}>
+          <Button onClick={() => handleRandomize("bosses")} className="w-full button-enhanced" disabled={isAnimating}>
             <Dice5 className="mr-2 h-4 w-4" />
             {t("main.roll.bosses")}
           </Button>
         </div>
       </div>
 
-      <Button onClick={() => handleRandomize("combined")} className="w-full" disabled={isAnimating}>
+      <Button onClick={() => handleRandomize("combined")} className="w-full button-enhanced" disabled={isAnimating}>
         <Dices className="mr-2 h-4 w-4" />
         {t("main.roll.both")}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl dialog-content">
           <DialogHeader>
             <DialogTitle>{t("results.title")}</DialogTitle>
           </DialogHeader>
@@ -357,11 +361,8 @@ export default function RandomizerForm() {
                               {/* Full-size boss image container */}
                               <div className="aspect-square relative overflow-hidden">
                                 <div
-                                    className={cn(
-                                      "absolute inset-0 z-0",
-                                      isLegendBoss(boss.name) && "rarity-5-gradient",
-                                    )}
-                                  ></div>
+                                  className={cn("absolute inset-0 z-0", isLegendBoss(boss.name) && "rarity-5-gradient")}
+                                ></div>
 
                                 {/* Boss image */}
                                 <div className="boss-image-container">
@@ -377,20 +378,19 @@ export default function RandomizerForm() {
                                 {/* Location badge with distinct border - now in top-left corner */}
                                 {isLegendBoss(boss.name) && (
                                   <div className="card-corner-element right">
-                                    <Badge className="legend-badge">
-                                      {t("main.legend")}
-                                    </Badge>
+                                    <Badge className="legend-badge">{t("main.legend")}</Badge>
                                   </div>
                                 )}
 
                                 {/* Boss info overlay - updated to match character layout */}
                                 <div className="boss-info-overlay">
-                                  <p className="text-sm font-medium truncate text-shadow" title={processBossName(boss.name)}>
+                                  <p
+                                    className="text-sm font-medium truncate text-shadow"
+                                    title={processBossName(boss.name)}
+                                  >
                                     {processBossName(boss.name)}
                                   </p>
-                                  <p className="text-xs text-white/80 text-shadow">
-                                    {boss.location}
-                                  </p>
+                                  <p className="text-xs text-white/80 text-shadow">{boss.location}</p>
                                 </div>
                               </div>
                             </CardContent>
@@ -493,7 +493,12 @@ export default function RandomizerForm() {
                   {(randomizeType === "characters" || randomizeType === "combined") &&
                     result.characters.length > 0 &&
                     settings.enableExclusion && (
-                      <Button variant="outline" onClick={toggleAllCharacters} disabled={isAnimating}>
+                      <Button
+                        variant="outline"
+                        onClick={toggleAllCharacters}
+                        disabled={isAnimating}
+                        className="button-enhanced"
+                      >
                         {areAllCharactersSelected ? t("results.unselectAll") : t("results.selectAll")}
                       </Button>
                     )}
@@ -504,6 +509,7 @@ export default function RandomizerForm() {
                         : handleAcceptSelected
                     }
                     disabled={isAnimating}
+                    className="button-enhanced"
                   >
                     {randomizeType === "bosses" || !settings.enableExclusion || result.characters.length === 0
                       ? t("results.close")

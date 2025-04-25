@@ -51,7 +51,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center justify-center main-container">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 space-y-2">
             <PoolInfo />

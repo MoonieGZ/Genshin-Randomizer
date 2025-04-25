@@ -7,6 +7,7 @@ import { GenshinDataProvider } from "@/components/genshin-data-provider"
 import { LanguageProvider } from "@/components/language-provider"
 import { Analytics } from "@vercel/analytics/react"
 import { Suspense } from "react"
+import { BackgroundParticles } from "@/components/background-particles"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <LanguageProvider>
             <GenshinDataProvider>
               <Suspense>
+                <BackgroundParticles />
                 {children}
                 <Toaster />
               </Suspense>
@@ -39,4 +41,4 @@ export default function RootLayout({
   )
 }
 
-import './globals.css'
+import "./globals.css"

@@ -2,8 +2,6 @@
 
 import { useGenshinData } from "./genshin-data-provider"
 import { Badge } from "@/components/ui/badge"
-import { HelpCircle } from "lucide-react"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useLanguage } from "./language-provider"
 
 export function ActiveRulesDisplay() {
