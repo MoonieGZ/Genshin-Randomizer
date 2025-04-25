@@ -299,11 +299,13 @@ body {
   }
 }
 
+/* Add this to the existing CSS file, near the card styling sections */
+
 /* Fix for card rendering artifacts */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
+  gap: 0.75rem; /* Reduced gap for better space utilization */
   width: 100%;
 }
 
@@ -359,4 +361,143 @@ body {
   .boss-card {
     transform: translateZ(0);
   }
+}
+
+/* Card corner elements container - UPDATED */
+.card-corner-element {
+  position: absolute;
+  top: 6px; /* Reduced from 12px */
+  height: 28px; /* Reduced from 32px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+/* Left corner (element icon) */
+.card-corner-element.left {
+  left: 6px; /* Reduced from 12px */
+}
+
+/* Right corner (checkbox) */
+.card-corner-element.right {
+  right: 6px; /* Reduced from 12px */
+}
+
+/* Element icon styling - UPDATED */
+.element-icon-container {
+  width: 28px; /* Reduced from 32px */
+  height: 28px; /* Reduced from 32px */
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.element-icon {
+  width: 22px; /* Reduced from 24px */
+  height: 22px; /* Reduced from 24px */
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* Checkbox container styling - UPDATED */
+.checkbox-container {
+  width: 28px; /* Reduced from 32px */
+  height: 28px; /* Reduced from 32px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+/* Checkbox styling - ENHANCED */
+.checkbox-select {
+  width: 20px !important; /* Increased from 20px for better visibility */
+  height: 20px !important; /* Increased from 20px for better visibility */
+  min-width: 20px !important;
+  min-height: 20px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 0 0 3px rgba(0, 0, 0, 0.2) !important; /* Enhanced contrast */
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  border: 1px solid rgba(0, 0, 0, 0.3) !important; /* Darker border for better visibility */
+  transition: background-color 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* Firefox-specific fixes */
+@-moz-document url-prefix() {
+  .checkbox-select {
+    position: static !important;
+    transform: none !important;
+  }
+  
+  .checkbox-container {
+    position: relative !important;
+  }
+}
+
+/* Ensure checkbox and element icon don't overlap with other elements */
+.character-card .checkbox-select,
+.character-card .element-icon-container {
+  z-index: 30;
+}
+
+/* Ensure visual distinction between checkbox and element icon */
+.checkbox-select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Improve checkbox visibility - ENHANCED */
+.checkbox-select[data-state="checked"] {
+  background-color: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure checkbox indicator is centered and more visible */
+.checkbox-select[data-state="checked"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px; /* Increased from 10px */
+  height: 12px; /* Increased from 10px */
+  background-color: var(--primary-foreground);
+  border-radius: 2px;
+}
+
+/* Reduce card content padding */
+.character-card .p-0,
+.boss-card .p-0 {
+  padding: 0 !important;
+}
+
+/* Optimize space utilization */
+.results-grid > div {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Add a subtle highlight effect to the checkbox container */
+.checkbox-container::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.checkbox-container:hover::before {
+  opacity: 1;
 }

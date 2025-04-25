@@ -3,7 +3,6 @@
 import { useGenshinData } from "./genshin-data-provider"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -82,11 +81,17 @@ export default function ExcludedCharacters() {
                         />
                       </div>
 
-                      {/* Element badge with distinct border */}
-                      <div className="absolute top-2 right-2 z-20">
-                        <Badge variant="secondary" className="element-badge">
-                          {character.element}
-                        </Badge>
+                      {/* Element icon in top-left corner - UPDATED */}
+                      <div className="card-corner-element left">
+                        <div className="element-icon-container">
+                          <Image
+                            src={`/elements/${character.element}.webp?height=32&width=32`}
+                            alt={character.element}
+                            width={32}
+                            height={32}
+                            className="element-icon"
+                          />
+                        </div>
                       </div>
 
                       {/* Character info overlay */}

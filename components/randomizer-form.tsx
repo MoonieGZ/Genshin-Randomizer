@@ -420,23 +420,31 @@ export default function RandomizerForm() {
                                   />
                                 </div>
 
-                                {/* Element badge with distinct border */}
-                                <div className="absolute top-2 right-2 z-20">
-                                  <Badge variant="secondary" className="element-badge">
-                                    {character.element}
-                                  </Badge>
+                                {/* Element icon in top-left corner - UPDATED */}
+                                <div className="card-corner-element left">
+                                  <div className="element-icon-container">
+                                    <Image
+                                      src={`/elements/${character.element}.webp?height=32&width=32`}
+                                      alt={character.element}
+                                      width={32}
+                                      height={32}
+                                      className="element-icon"
+                                    />
+                                  </div>
                                 </div>
 
-                                {/* Checkbox for selection */}
+                                {/* Checkbox for selection - UPDATED */}
                                 {settings.enableExclusion && (
-                                  <div className="absolute top-2 left-2 z-20">
-                                    <Checkbox
-                                      checked={character.selected}
-                                      onCheckedChange={() => toggleCharacterSelection(index)}
-                                      id={`select-${character.name}`}
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="bg-background/80 backdrop-blur-sm"
-                                    />
+                                  <div className="card-corner-element right">
+                                    <div className="checkbox-container">
+                                      <Checkbox
+                                        checked={character.selected}
+                                        onCheckedChange={() => toggleCharacterSelection(index)}
+                                        id={`select-${character.name}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="checkbox-select"
+                                      />
+                                    </div>
                                   </div>
                                 )}
 
