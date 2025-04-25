@@ -143,6 +143,16 @@ body {
   );
 }
 
+/* Legend gradient for boss cards */
+.legend-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.25) 0%,
+    rgba(217, 119, 6, 0.25) 50%,
+    rgba(180, 83, 9, 0.25) 100%
+  );
+}
+
 /* Subtle border accents for character cards */
 .border-accent-4 {
   border-color: rgba(139, 92, 246, 0.3);
@@ -215,7 +225,7 @@ body {
   transition: transform 0.3s ease;
 }
 
-/* Boss info overlay */
+/* Boss info overlay - updated to match character layout */
 .boss-info-overlay {
   position: absolute;
   bottom: 0;
@@ -350,7 +360,8 @@ body {
 
 /* Ensure gradient backgrounds don't cause artifacts */
 .rarity-4-gradient,
-.rarity-5-gradient {
+.rarity-5-gradient,
+.legend-gradient {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -366,8 +377,8 @@ body {
 /* Card corner elements container - UPDATED */
 .card-corner-element {
   position: absolute;
-  top: 6px; /* Reduced from 12px */
-  height: 28px; /* Reduced from 32px */
+  top: 6px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,18 +388,18 @@ body {
 
 /* Left corner (element icon) */
 .card-corner-element.left {
-  left: 6px; /* Reduced from 12px */
+  left: 6px;
 }
 
 /* Right corner (checkbox) */
 .card-corner-element.right {
-  right: 6px; /* Reduced from 12px */
+  right: 6px;
 }
 
-/* Element icon styling - UPDATED */
+/* Element icon styling */
 .element-icon-container {
-  width: 28px; /* Reduced from 32px */
-  height: 28px; /* Reduced from 32px */
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.3);
@@ -399,36 +410,36 @@ body {
 }
 
 .element-icon {
-  width: 22px; /* Reduced from 24px */
-  height: 22px; /* Reduced from 24px */
+  width: 22px;
+  height: 22px;
   object-fit: contain;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
-/* Checkbox container styling - UPDATED */
+/* Checkbox container styling */
 .checkbox-container {
-  width: 28px; /* Reduced from 32px */
-  height: 28px; /* Reduced from 32px */
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: transparent;
 }
 
-/* Checkbox styling - ENHANCED */
+/* Checkbox styling */
 .checkbox-select {
-  width: 20px !important; /* Increased from 20px for better visibility */
-  height: 20px !important; /* Increased from 20px for better visibility */
+  width: 20px !important;
+  height: 20px !important;
   min-width: 20px !important;
   min-height: 20px !important;
   border-radius: 4px !important;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 0 0 3px rgba(0, 0, 0, 0.2) !important; /* Enhanced contrast */
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 0 0 3px rgba(0, 0, 0, 0.2) !important;
   position: relative !important;
   margin: 0 !important;
   padding: 0 !important;
   background-color: var(--primary) !important;
   border-color: var(--primary) !important;
-  border: 1px solid rgba(0, 0, 0, 0.3) !important; /* Darker border for better visibility */
+  border: 1px solid rgba(0, 0, 0, 0.3) !important;
   transition: background-color 0.2s ease, border-color 0.2s ease !important;
 }
 
@@ -446,7 +457,8 @@ body {
 
 /* Ensure checkbox and element icon don't overlap with other elements */
 .character-card .checkbox-select,
-.character-card .element-icon-container {
+.character-card .element-icon-container,
+.boss-card .element-icon-container {
   z-index: 30;
 }
 
@@ -500,4 +512,11 @@ body {
 
 .checkbox-container:hover::before {
   opacity: 1;
+}
+
+/* Legend badge styling */
+.legend-badge {
+  background-color: rgba(251, 191, 36, 0.8);
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 600;
 }

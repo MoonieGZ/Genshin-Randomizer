@@ -259,6 +259,19 @@ export default function RandomizerForm() {
     window.open(link, "_blank", "noopener,noreferrer")
   }
 
+  // Function to process boss name - remove "⭐ - " prefix if present
+  const processBossName = (name: string) => {
+    if (name.startsWith("⭐ - ")) {
+      return name.substring(4) // Remove the "⭐ - " prefix
+    }
+    return name
+  }
+
+  // Function to determine if a boss is a legend
+  const isLegendBoss = (name: string) => {
+    return name.startsWith("⭐ - ")
+  }
+
   // Reset animation state when dialog closes
   useEffect(() => {
     if (!open) {
@@ -343,29 +356,41 @@ export default function RandomizerForm() {
                             <CardContent className="p-0 relative">
                               {/* Full-size boss image container */}
                               <div className="aspect-square relative overflow-hidden">
-                                <div className="absolute inset-0 z-0 bg-muted"></div>
+                                <div
+                                    className={cn(
+                                      "absolute inset-0 z-0",
+                                      isLegendBoss(boss.name) && "rarity-5-gradient",
+                                    )}
+                                  ></div>
 
                                 {/* Boss image */}
                                 <div className="boss-image-container">
                                   <Image
                                     src={`/bosses/${boss.location}/${boss.icon}?height=200&width=200&text=${encodeURIComponent(boss.name)}`}
-                                    alt={boss.name}
+                                    alt={processBossName(boss.name)}
                                     width={200}
                                     height={200}
                                     className="object-cover"
                                   />
                                 </div>
 
-                                {/* Location badge with distinct border */}
-                                <div className="absolute top-2 right-2 z-20">
-                                  <Badge variant="secondary" className="element-badge">
-                                    {boss.location}
-                                  </Badge>
-                                </div>
+                                {/* Location badge with distinct border - now in top-left corner */}
+                                {isLegendBoss(boss.name) && (
+                                  <div className="card-corner-element right">
+                                    <Badge className="legend-badge">
+                                      {t("main.legend")}
+                                    </Badge>
+                                  </div>
+                                )}
 
-                                {/* Boss info overlay */}
+                                {/* Boss info overlay - updated to match character layout */}
                                 <div className="boss-info-overlay">
-                                  <p className="text-sm font-medium truncate text-shadow">{boss.name}</p>
+                                  <p className="text-sm font-medium truncate text-shadow" title={processBossName(boss.name)}>
+                                    {processBossName(boss.name)}
+                                  </p>
+                                  <p className="text-xs text-white/80 text-shadow">
+                                    {boss.location}
+                                  </p>
                                 </div>
                               </div>
                             </CardContent>
@@ -420,7 +445,7 @@ export default function RandomizerForm() {
                                   />
                                 </div>
 
-                                {/* Element icon in top-left corner - UPDATED */}
+                                {/* Element icon in top-left corner */}
                                 <div className="card-corner-element left">
                                   <div className="element-icon-container">
                                     <Image
@@ -433,7 +458,7 @@ export default function RandomizerForm() {
                                   </div>
                                 </div>
 
-                                {/* Checkbox for selection - UPDATED */}
+                                {/* Checkbox for selection */}
                                 {settings.enableExclusion && (
                                   <div className="card-corner-element right">
                                     <div className="checkbox-container">
