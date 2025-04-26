@@ -367,10 +367,10 @@ export default function RandomizerForm() {
                                 {/* Boss image */}
                                 <div className="boss-image-container">
                                   <Image
-                                    src={`/bosses/${boss.location}/${boss.icon}?height=200&width=200&text=${encodeURIComponent(boss.name)}`}
+                                    src={`/bosses/${boss.location}/${boss.icon}?text=${encodeURIComponent(boss.name)}`}
                                     alt={processBossName(boss.name)}
-                                    width={200}
-                                    height={200}
+                                    width={256}
+                                    height={256}
                                     className="object-cover"
                                   />
                                 </div>
@@ -437,10 +437,10 @@ export default function RandomizerForm() {
                                 {/* Character image */}
                                 <div className="character-image-container">
                                   <Image
-                                    src={`/characters/${character.element}/${character.icon}?height=200&width=200&text=${encodeURIComponent(character.name)}`}
+                                    src={`/characters/${character.element}/${character.icon}?text=${encodeURIComponent(character.name)}`}
                                     alt={character.name}
-                                    width={200}
-                                    height={200}
+                                    width={256}
+                                    height={256}
                                     className="object-cover"
                                   />
                                 </div>

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Firefox-specific styles - disable gradient animation */
 @-moz-document url-prefix() {
   body {
     background-image: none !important;
@@ -57,7 +56,6 @@ body {
   }
 }
 
-/* Add a subtle texture overlay */
 body::after {
   content: "";
   position: fixed;
@@ -75,7 +73,6 @@ body::after {
   opacity: 0.1;
 }
 
-/* Particle animation keyframes */
 @keyframes float {
   0%,
   100% {
@@ -189,7 +186,6 @@ body::after {
   }
 }
 
-/* Enhanced Card Styling */
 .card {
   background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
@@ -213,7 +209,6 @@ body::after {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.3);
 }
 
-/* Header and Footer Styling */
 header,
 footer {
   background-color: rgba(255, 255, 255, 0.8);
@@ -262,7 +257,6 @@ footer {
   animation: fadeIn 0.3s ease-out, shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-/* Character rarity gradients - reduced intensity */
 .rarity-4-gradient {
   background: linear-gradient(
     135deg,
@@ -281,7 +275,6 @@ footer {
   );
 }
 
-/* Legend gradient for boss cards */
 .legend-gradient {
   background: linear-gradient(
     135deg,
@@ -291,7 +284,6 @@ footer {
   );
 }
 
-/* Subtle border accents for character cards */
 .border-accent-4 {
   border-color: rgba(139, 92, 246, 0.3);
 }
@@ -300,16 +292,20 @@ footer {
   border-color: rgba(217, 119, 6, 0.3);
 }
 
-/* Full-size character image container */
 .character-image-container {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: 0.375rem;
+  transform: translateZ(0);
+  z-index: 0;
+  will-change: transform;
 }
 
 .character-image-container img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -317,19 +313,16 @@ footer {
   transition: transform 0.3s ease;
 }
 
-/* Card hover effect */
 .character-card:hover .character-image-container img,
 .boss-card:hover .boss-image-container img {
   transform: scale(1.05);
 }
 
-/* Element/Location badge with distinct border */
 .element-badge {
   border: 2px solid var(--background);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
-/* Character info overlay */
 .character-info-overlay {
   position: absolute;
   bottom: 0;
@@ -338,24 +331,30 @@ footer {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
   padding: 1rem 0.5rem 0.5rem;
   color: white;
-  z-index: 10;
+  z-index: 20;
+  opacity: 0;
+  animation: fadeIn 0.4s ease 0.1s forwards;
+  will-change: opacity, transform;
 }
 
-/* Text shadow for better readability */
 .text-shadow {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Boss image container */
 .boss-image-container {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: 0.375rem;
+  transform: translateZ(0);
+  z-index: 0;
+  will-change: transform;
 }
 
 .boss-image-container img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -363,7 +362,6 @@ footer {
   transition: transform 0.3s ease;
 }
 
-/* Boss info overlay - updated to match character layout */
 .boss-info-overlay {
   position: absolute;
   bottom: 0;
@@ -372,17 +370,18 @@ footer {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
   padding: 1rem 0.5rem 0.5rem;
   color: white;
-  z-index: 10;
+  z-index: 20;
+  opacity: 0;
+  animation: fadeIn 0.4s ease 0.1s forwards;
+  will-change: opacity, transform;
 }
 
-/* Overlay for better text readability */
 .card-overlay {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
   border-radius: 0.375rem;
 }
 
-/* Gradient border effect - fix border visibility */
 .gradient-border-4 {
   position: relative;
   z-index: 0;
@@ -395,7 +394,7 @@ footer {
   content: "";
   position: absolute;
   z-index: -2;
-  inset: -1px; /* Use inset instead of individual properties */
+  inset: -1px;
   background-color: transparent;
   background: linear-gradient(
     135deg,
@@ -419,7 +418,7 @@ footer {
   content: "";
   position: absolute;
   z-index: -2;
-  inset: -1px; /* Use inset instead of individual properties */
+  inset: -1px;
   background-color: transparent;
   background: linear-gradient(
     135deg,
@@ -436,7 +435,7 @@ footer {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: 1px; /* Use inset instead of individual properties */
+  inset: 1px;
   background: var(--background);
   border-radius: calc(0.5rem - 1px);
 }
@@ -447,23 +446,19 @@ footer {
   }
 }
 
-/* Add this to the existing CSS file, near the card styling sections */
-
-/* Fix for card rendering artifacts */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.75rem; /* Reduced gap for better space utilization */
+  gap: 0.75rem;
   width: 100%;
 }
 
-/* Ensure cards have clean rendering without artifacts */
 .character-card,
 .boss-card {
   width: 100%;
-  transform: translateZ(0); /* Force GPU acceleration */
-  backface-visibility: hidden; /* Prevent rendering artifacts */
-  will-change: transform; /* Hint to browser about animation */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -475,24 +470,10 @@ footer {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Ensure image containers don't cause overflow */
-.character-image-container,
-.boss-image-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 0.375rem;
-  transform: translateZ(0); /* Force GPU acceleration */
-}
-
-/* Add these additional fixes to prevent rendering artifacts */
-
-/* Ensure clean card borders */
 .card {
-  isolation: isolate; /* Create a new stacking context */
+  isolation: isolate;
 }
 
-/* Fix for border rendering */
 .character-card::after,
 .boss-card::after {
   content: "";
@@ -504,7 +485,6 @@ footer {
   z-index: 10;
 }
 
-/* Ensure gradient backgrounds don't cause artifacts */
 .rarity-4-gradient,
 .rarity-5-gradient,
 .legend-gradient {
@@ -512,7 +492,6 @@ footer {
   backface-visibility: hidden;
 }
 
-/* Ensure proper rendering on high-DPI displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .character-card,
   .boss-card {
@@ -520,7 +499,6 @@ footer {
   }
 }
 
-/* Card corner elements container - UPDATED */
 .card-corner-element {
   position: absolute;
   top: 6px;
@@ -529,20 +507,17 @@ footer {
   align-items: center;
   justify-content: center;
   z-index: 30;
-  transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
 }
 
-/* Left corner (element icon) */
 .card-corner-element.left {
   left: 6px;
 }
 
-/* Right corner (checkbox) */
 .card-corner-element.right {
   right: 6px;
 }
 
-/* Element icon styling */
 .element-icon-container {
   width: 28px;
   height: 28px;
@@ -562,7 +537,6 @@ footer {
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
-/* Checkbox container styling */
 .checkbox-container {
   width: 28px;
   height: 28px;
@@ -572,7 +546,6 @@ footer {
   background-color: transparent;
 }
 
-/* Checkbox styling */
 .checkbox-select {
   width: 20px !important;
   height: 20px !important;
@@ -589,7 +562,6 @@ footer {
   transition: background-color 0.2s ease, border-color 0.2s ease !important;
 }
 
-/* Firefox-specific fixes */
 @-moz-document url-prefix() {
   .checkbox-select {
     position: static !important;
@@ -601,51 +573,44 @@ footer {
   }
 }
 
-/* Ensure checkbox and element icon don't overlap with other elements */
 .character-card .checkbox-select,
 .character-card .element-icon-container,
 .boss-card .element-icon-container {
   z-index: 30;
 }
 
-/* Ensure visual distinction between checkbox and element icon */
 .checkbox-select:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-/* Improve checkbox visibility - ENHANCED */
 .checkbox-select[data-state="checked"] {
   background-color: rgba(255, 255, 255, 1) !important;
   border-color: rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Ensure checkbox indicator is centered and more visible */
 .checkbox-select[data-state="checked"]::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 12px; /* Increased from 10px */
-  height: 12px; /* Increased from 10px */
+  width: 12px;
+  height: 12px;
   background-color: var(--primary-foreground);
   border-radius: 2px;
 }
 
-/* Reduce card content padding */
 .character-card .p-0,
 .boss-card .p-0 {
   padding: 0 !important;
 }
 
-/* Optimize space utilization */
 .results-grid > div {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-/* Add a subtle highlight effect to the checkbox container */
 .checkbox-container::before {
   content: "";
   position: absolute;
@@ -660,20 +625,17 @@ footer {
   opacity: 1;
 }
 
-/* Legend badge styling */
 .legend-badge {
   background-color: rgba(251, 191, 36, 0.8);
   color: rgba(0, 0, 0, 0.8);
   font-weight: 600;
 }
 
-/* Main container styling */
 .main-container {
   position: relative;
   z-index: 1;
 }
 
-/* Dialog content styling */
 .dialog-content {
   background-color: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
@@ -686,7 +648,6 @@ footer {
   border: 1px solid rgba(50, 50, 60, 0.3);
 }
 
-/* Button styling enhancement */
 .button-enhanced {
   position: relative;
   overflow: hidden;
@@ -704,7 +665,6 @@ footer {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Floating effect for main card */
 .float-card {
   animation: floating 6s ease-in-out infinite;
 }
@@ -721,7 +681,6 @@ footer {
   }
 }
 
-/* Performance optimizations */
 @media (prefers-reduced-motion: reduce) {
   .float-card {
     animation: none;
