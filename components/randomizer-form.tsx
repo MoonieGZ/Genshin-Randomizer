@@ -114,6 +114,15 @@ export default function RandomizerForm() {
 
     const candidatePool = [...nonTravelers]
 
+    const fisherYatesShuffle = (array: any[]) => {
+      const shuffled = [...array]
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      }
+      return shuffled
+    }
+
     // Step 3: If coopMode is disabled, optionally add 1 random Traveler
     if (!settings.rules.coopMode && travelers.length > 0) {
       const randomTraveler = travelers[Math.floor(Math.random() * travelers.length)]
@@ -142,10 +151,10 @@ export default function RandomizerForm() {
       const selected5 = [...fiveStars].sort(() => Math.random() - 0.5).slice(0, max5)
       const selected4 = [...fourStars].sort(() => Math.random() - 0.5).slice(0, count - selected5.length)
 
-      finalCharacters = [...selected5, ...selected4].sort(() => Math.random() - 0.5)
+      finalCharacters = fisherYatesShuffle([...selected5, ...selected4])
     } else {
       // No 5-star limit, just take a random sample of the pool
-      finalCharacters = [...candidatePool].sort(() => Math.random() - 0.5).slice(0, settings.characters.count)
+      finalCharacters = fisherYatesShuffle(candidatePool).slice(0, settings.characters.count)
     }
 
     return finalCharacters.map((char) => ({ ...char, selected: false, visible: false }))
