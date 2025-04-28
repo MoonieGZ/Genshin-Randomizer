@@ -44,6 +44,15 @@ export default function RandomizerForm() {
   const { t } = useLanguage()
   const [isAnimating, setIsAnimating] = useState(false)
 
+  const fisherYatesShuffle = (array: any[]) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
   // Check if all characters are currently selected
   const areAllCharactersSelected = result?.characters.every((char) => char.selected) || false
 
@@ -114,15 +123,6 @@ export default function RandomizerForm() {
 
     const candidatePool = [...nonTravelers]
 
-    const fisherYatesShuffle = (array: any[]) => {
-      const shuffled = [...array]
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-      }
-      return shuffled
-    }
-
     // Step 3: If coopMode is disabled, optionally add 1 random Traveler
     if (!settings.rules.coopMode && travelers.length > 0) {
       const randomTraveler = travelers[Math.floor(Math.random() * travelers.length)]
@@ -178,8 +178,7 @@ export default function RandomizerForm() {
     }
 
     // Shuffle and select bosses
-    const selectedBosses = [...enabledBosses]
-      .sort(() => Math.random() - 0.5)
+    const selectedBosses = fisherYatesShuffle([...enabledBosses])
       .slice(0, settings.bosses.count)
       .map((boss) => ({ ...boss, visible: false }))
 
