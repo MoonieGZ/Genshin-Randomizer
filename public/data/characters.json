@@ -306,6 +306,12 @@
     "icon": "Kuki_Shinobu_Icon.webp"
   },
   {
+    "name": "Lisa",
+    "rarity": 4,
+    "element": "Electro",
+    "icon": "Lisa_Icon.webp"
+  },
+  {
     "name": "Ororon",
     "rarity": 4,
     "element": "Electro",
