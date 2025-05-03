@@ -234,7 +234,8 @@
     "name": "Setekh Wenut",
     "icon": "Setekh_Wenut_Icon.webp",
     "location": "Sumeru",
-    "link": "https://genshin-impact.fandom.com/wiki/Setekh_Wenut"
+    "link": "https://genshin-impact.fandom.com/wiki/Setekh_Wenut",
+    "coop": true
   },
   {
     "name": "Emperor of Fire and Iron",
