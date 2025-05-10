@@ -1,0 +1,107 @@
+{
+  "app": {
+    "title": "Genshin Impact Randomizer",
+    "loading": "Daten werden geladen..."
+  },
+  "header": {
+    "back": "Zurück",
+    "settings": "Einstellungen",
+    "github": "GitHub Repository",
+    "reset": "Zurücksetzen"
+  },
+  "footer": {
+    "version": "Ver:",
+    "copyright": "Moons © 2025"
+  },
+  "main": {
+    "roll": {
+      "characters": "Charaktere würfeln",
+      "bosses": "Bosse würfeln",
+      "both": "Beide würfeln"
+    },
+    "characters": "Charaktere",
+    "bosses": "Bosse",
+    "noRules": "Keine Regeln aktiv",
+    "activeRules": "Aktive Regeln:"
+  },
+  "results": {
+    "title": "Zufallsergebnisse",
+    "selectAll": "Alle auswählen",
+    "unselectAll": "Nichts auswählen",
+    "close": "Schließen",
+    "accept": "Akzeptieren",
+    "noCharactersSelected": "Keine Charaktere ausgewählt",
+    "selectAtLeastOne": "Bitte wähle mindestens einen Charakter aus um zu akzeptieren",
+    "charactersAccepted": "Charaktere akzeptiert",
+    "charactersExcluded": "Charakter(e) sind von zukünftigen Würfen ausgeschlossen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Passe an, welche Charaktere und Bosse im Randomizer ausgewählt werden können",
+    "tabs": {
+      "characters": "Charaktere",
+      "bosses": "Bosse",
+      "excluded": "Ausgeschlossen",
+      "rules": "Regeln"
+    },
+    "filter": "Filter",
+    "search": "Suche",
+    "enableAll": "Alle aktivieren",
+    "disableAll": "Alle deaktivieren",
+    "disableLegends": "Legenden deaktivieren",
+    "coopModeWarning": "Ko-op-Modus ist aktiviert: Nicht-Ko-op-Bosse werden automatisch deaktiviert.",
+    "coopDisabled": "Koop nicht verfügbar",
+    "resetConfirm": {
+      "title": "Alle Einstellungen zurücksetzen?",
+      "description": "Alle Einstellungen werden auf die Werkseinstellungen zurückgesetzt. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "cancel": "Abbrechen",
+      "confirm": "Ich habe verstanden"
+    }
+  },
+  "rules": {
+    "coopMode": {
+      "title": "Ko-op Modus",
+      "description": "Legt fest, ob mehrere Reisende mit unterschiedlichen Elementen in einem einzelnen Wurf ausgewählt werden können",
+      "enabled": "Aktiviert: Mehrere Reisende mit unterschiedlichen Elementen können ausgewählt werden",
+      "disabled": "Deaktiviert: Pro Wurf kann nur ein Reisender ausgewählt werden"
+    },
+    "fiveStarLimit": {
+      "title": "Limit an 5-Stern Charakteren",
+      "description": "Legt fest, wie viele 5-Sterne-Charaktere maximal in einem einzelnen Wurf ausgewählt werden können",
+      "enabled": "Aktiviert: Die Anzahl der 5-Sterne-Charaktere pro Wurf ist begrenzt",
+      "disabled": "Deaktiviert: Keine Begrenzung für 5-Sterne-Charaktere",
+      "maximum": "Max. 5-Sterne-Charaktere:"
+    },
+    "coopConfirm": {
+      "title": "Nicht-Koop-Bosse deaktivieren?",
+      "description": "Das Aktivieren des Koop-Modus deaktiviert die folgenden Bosse:",
+      "note": "Diese Bosse werden in deinen Einstellungen automatisch deaktiviert.",
+      "question": "Möchtest du fortfahren?",
+      "cancel": "Abbrechen",
+      "confirm": "Weiter"
+    }
+  },
+  "excluded": {
+    "title": "Ausgeschlossene Charaktere",
+    "enableExclusion": "Ausschluss von Charakteren aktivieren",
+    "resetAll": "Alle zurücksetzen",
+    "noCharacters": "Es wurden noch keine Charaktere ausgeschlossen. Wenn du Charaktere aus dem Randomizer übernimmst, werden sie hier angezeigt.",
+    "clickToReEnable": "Klicken, um wieder zu aktivieren"
+  },
+  "accepted": {
+    "title": "Ausgewählte Charaktere",
+    "manage": "Verwalten"
+  },
+  "pool": {
+    "availableCharacters": "Verfügbare Charaktere",
+    "availableBosses": "Verfügbare Bosse"
+  },
+  "language": {
+    "en": "Englisch",
+    "es": "Spanisch",
+    "fr": "Französisch",
+    "de": "Deutsch",
+    "ja": "Japanisch",
+    "zh": "Chinesisch"
+  }
+}
